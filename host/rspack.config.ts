@@ -22,7 +22,7 @@ export default defineConfig({
   },
 
   devServer: {
-    port: 8080,
+    port: 8085,
     historyApiFallback: true,
     watchFiles: [path.resolve(__dirname, "src")],
   },
