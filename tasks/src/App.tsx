@@ -1,5 +1,5 @@
 import ReactDOM from "react-dom/client";
-import { BrowserRouter, Routes, Route, useParams, useNavigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useParams, useNavigate, Navigate } from "react-router-dom";
 
 import "./index.css";
 import { TaskDetails } from "./components/taskDetails";
@@ -39,6 +39,7 @@ const App = () => (
             <Route path="/details/:id" element={<TaskDetailsWrapper />} />
             <Route path="/new" element={<NewTask />} />
             <Route path="/" element={<HomeComponent />} />
+            <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </div>
       </div>

@@ -1,4 +1,6 @@
+import { useState } from "react";
 import { useFetchTask } from "../hooks/useFetchTask";
+import { ConfirmationModal } from "./comfirmationModal";
 
 interface TaskDetailsProps {
   taskId: number;
@@ -6,6 +8,29 @@ interface TaskDetailsProps {
 
 export const TaskDetails = ({ taskId }: TaskDetailsProps) => {
   const { task, loading, error } = useFetchTask(taskId);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const handleDeleteTask = async () => {
+    setIsDeleting(true);
+    try {
+      // Aquí puedes agregar la lógica para eliminar la tarea
+      // await deleteTask(taskId);
+      console.log(`Eliminando tarea con ID: ${taskId}`);
+      
+      // Simular una llamada a la API
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      setShowDeleteModal(false);
+      // Aquí podrías redirigir a otra página o actualizar la lista
+      alert('Tarea eliminada exitosamente');
+    } catch (error) {
+      console.error('Error al eliminar la tarea:', error);
+      alert('Error al eliminar la tarea');
+    } finally {
+      setIsDeleting(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -112,10 +137,27 @@ export const TaskDetails = ({ taskId }: TaskDetailsProps) => {
         <div className="border-t border-gray-500 my-4"></div>
         <div className="flex justify-center gap-3">
           <button className="btn btn-primary">Editar tarea</button>
-          <button className="btn btn-secondary">Eliminar tarea</button>
+          <button 
+            className="btn btn-secondary"
+            onClick={() => setShowDeleteModal(true)}
+          >
+            Eliminar tarea
+          </button>
         </div>
 
       </div>
+
+      {/* Modal de confirmación para eliminar */}
+      <ConfirmationModal
+        isOpen={showDeleteModal}
+        title="Eliminar tarea"
+        bodyText={`¿Estás seguro de que quieres eliminar la tarea "${task?.title}"? Esta acción no se puede deshacer.`}
+        confirmText="Eliminar"
+        cancelText="Cancelar"
+        onConfirm={handleDeleteTask}
+        onCancel={() => setShowDeleteModal(false)}
+        isLoading={isDeleting}
+      />
     </div>
   );
 };
