@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Board } from '../interfaces/board';
 //import { fetchBoards, createBoard } from '../services/boardsService';
-import { fetchBoardsMock as fetchBoards, createBoardMock as createBoard } from "../services/boardsService.mock";
+import { fetchBoardsMock as fetchBoards, createBoardMock as createBoard } from "../services/mocks/boardsService.mock";
 import { BoardCard } from './BoardCard';
 
 
@@ -46,9 +46,9 @@ return (
         </button>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {boards.map((b) => (
-          <BoardCard key={b.id} board={b} onOpen={onOpenBoard} />
-        ))}
+      {boards.map((b) => (
+      <BoardCard key={b.id} board={b} onOpen={onOpenBoard} />
+      ))}
       </div>
     </div>
   );

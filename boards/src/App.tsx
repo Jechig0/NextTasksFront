@@ -1,16 +1,20 @@
 import ReactDOM from "react-dom/client";
 
 import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useNavigate, useParams } from 'react-router-dom';
 import { BoardList } from './components/BoardList';
-
+import { BoardView } from "./views/Boardview";
 import "./index.css";
 
-
 const Home: React.FC = () => {
-// token could come from a global window.__AUTH or similar provided by host
-const token = (window as any).__TOKEN as string | undefined;
-return <BoardList token={token} onOpenBoard={(id) => alert(`Abrir tablero ${id}`)} />;
+const navigate = useNavigate();
+return <BoardList onOpenBoard={(id) => navigate(`/boards/${id}`)} />;
+};
+
+const BoardPage: React.FC = () => {
+  const { id } = useParams<{ id: string }>(); // 👈 forzamos tipado
+  if (!id) return <div>Board ID no proporcionado</div>;
+  return <BoardView boardId={id} />;
 };
 
 const App = () => (
@@ -18,6 +22,7 @@ const App = () => (
     <div className="p-6 min-h-screen bg-gray-50">
     <Routes>
       <Route path="/" element={<Home />} />
+      <Route path="/boards/:id" element={<BoardPage />} />
     </Routes>
     </div>
   </BrowserRouter>

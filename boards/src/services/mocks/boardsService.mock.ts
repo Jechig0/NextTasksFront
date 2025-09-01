@@ -1,4 +1,4 @@
-import { Board } from "../interfaces/board";
+import { Board } from "../../interfaces/board";
 
 // Unas cuantas fechas simuladas
 const now = new Date().toISOString();
