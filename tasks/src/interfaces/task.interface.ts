@@ -10,6 +10,15 @@ export interface Task {
     tags:           Tag[];
 }
 
+export interface TaskRequest {
+    title:          string;
+    description:    string;
+    dueDate:        string; // En formato ISO string para enviar al backend
+    priority:       number;
+    boardId:        number;
+    tagIds?:        number[]; // IDs de las etiquetas opcionales
+}
+
 export interface Board {
     id:          number;
     name:        string;
