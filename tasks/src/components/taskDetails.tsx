@@ -1,6 +1,8 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useFetchTask } from "../hooks/useFetchTask";
 import { ConfirmationModal } from "./comfirmationModal";
+import { deleteTask } from "../services/Task.service";
 
 interface TaskDetailsProps {
   taskId: number;
@@ -10,23 +12,22 @@ export const TaskDetails = ({ taskId }: TaskDetailsProps) => {
   const { task, loading, error } = useFetchTask(taskId);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const navigate = useNavigate();
 
   const handleDeleteTask = async () => {
     setIsDeleting(true);
     try {
-      // Aquí puedes agregar la lógica para eliminar la tarea
-      // await deleteTask(taskId);
-      console.log(`Eliminando tarea con ID: ${taskId}`);
-      
-      // Simular una llamada a la API
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
+      await deleteTask(taskId);
       setShowDeleteModal(false);
-      // Aquí podrías redirigir a otra página o actualizar la lista
+      
+      // Mostrar mensaje de éxito
       alert('Tarea eliminada exitosamente');
+      
+      // Redirigir a la página principal o lista de tareas
+      navigate('/');
     } catch (error) {
-      console.error('Error al eliminar la tarea:', error);
-      alert('Error al eliminar la tarea');
+      console.error("Error al eliminar la tarea:", error);
+      alert(`Error al eliminar la tarea: ${error instanceof Error ? error.message : 'Error desconocido'}`);
     } finally {
       setIsDeleting(false);
     }
@@ -52,7 +53,7 @@ export const TaskDetails = ({ taskId }: TaskDetailsProps) => {
   if (!task) {
     return (
       <div className="alert alert-warning">
-          <span>No se encontró la tarea</span>
+        <span>No se encontró la tarea</span>
       </div>
     );
   }
@@ -129,22 +130,36 @@ export const TaskDetails = ({ taskId }: TaskDetailsProps) => {
                   {tag.name}
                 </div>
               ))}
-              <div className="px-3 py-1 btn text-sm border border-green-700 text-green-700 " >+</div>
+              <div className="px-3 py-1 btn text-sm border border-green-700 text-green-700 ">
+                +
+              </div>
             </div>
           </div>
         )}
 
+        {!task.tags ||
+          (task.tags.length === 0 && (
+            <div className="px-3 py-1 btn text-sm border border-green-700 text-green-700 ">
+              +
+            </div>
+          ))}
+
         <div className="border-t border-gray-500 my-4"></div>
         <div className="flex justify-center gap-3">
-          <button className="btn btn-primary">Editar tarea</button>
           <button 
+            className="btn btn-outline"
+            onClick={() => navigate('/')}
+          >
+            Volver
+          </button>
+          <button className="btn btn-primary">Editar tarea</button>
+          <button
             className="btn btn-secondary"
             onClick={() => setShowDeleteModal(true)}
           >
             Eliminar tarea
           </button>
         </div>
-
       </div>
 
       {/* Modal de confirmación para eliminar */}

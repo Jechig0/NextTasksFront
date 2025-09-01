@@ -21,7 +21,7 @@ const HomeComponent = () => {
       <h1 className="text-2xl font-bold text-blue-600 mb-4">Bienvenido a Tasks</h1>
       <p className="text-gray-600">Selecciona una opción para continuar</p>
       <button className="btn btn-primary mt-4" onClick={() => navigate("/new")}>Crear nueva tarea</button>
-      <button className="btn btn-primary mt-4 ml-2" onClick={() => navigate("/details/2")}>Ir a Tarea2</button>
+      <button className="btn btn-primary mt-4 ml-2" onClick={() => navigate("/details/4")}>Ir a Tarea2</button>
     </div>
   );
 };

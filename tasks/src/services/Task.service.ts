@@ -46,3 +46,22 @@ export const createTask = async (taskData: TaskRequest): Promise<Task> => {
     const data = await response.json() as Task;
     return data;
 };
+
+export const deleteTask = async (taskId: number): Promise<void> => {
+    const response = await fetch(`${baseUrl}/tasks/${taskId}`, {
+        method: 'DELETE',
+    });
+
+    if (!response.ok) {
+        try {
+            // Intentar obtener el mensaje de error del backend
+            const errorData: ErrorResponse = await response.json();
+            console.log("Error deleting task:", errorData.message);
+            throw new Error(errorData.message);
+        } catch (parseError) {
+            // Si no se puede parsear la respuesta, usar el statusText
+            console.log("Error deleting task:", response.statusText);
+            throw new Error("Failed to delete task");
+        }
+    }
+};
