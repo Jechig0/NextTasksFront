@@ -2,8 +2,11 @@ import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route, useParams, useNavigate, Navigate } from "react-router-dom";
 
 import "./index.css";
-import { TaskDetails } from "./components/taskDetails";
-import { NewTask } from "./components/newTask";
+import { TaskDetails } from "./components/tasks/taskDetails";
+import { NewTask } from "./components/tasks/newTask";
+import NewTag from "./components/tags/newTag";
+import AddTagToTask from "./components/tags/addTagToTask";
+import EditTask from "./components/tasks/editTask";
 
 // Componente wrapper para TaskDetails que obtiene el ID de la URL
 const TaskDetailsWrapper = () => {
@@ -27,7 +30,7 @@ const HomeComponent = () => {
 };
 
 const App = () => (
-  <BrowserRouter>
+  <BrowserRouter basename="/tasks">
     <div className="min-h-screen w-full relative bg-gradient-to-br from-blue-100 to-purple-100">
       {/* Fondo con blur */}
       <div className="absolute inset-0 bg-white/20 backdrop-blur-sm"></div>
@@ -37,7 +40,11 @@ const App = () => (
         <div className="bg-white/80 backdrop-blur-md rounded-2xl shadow-xl p-8 max-w-md w-full mx-4 text-center">
           <Routes>
             <Route path="/details/:id" element={<TaskDetailsWrapper />} />
+            <Route path="/edit/:id" element={<EditTask />} />
             <Route path="/new" element={<NewTask />} />
+            <Route path="/addTag/:taskId" element={<AddTagToTask userId={1} />} />
+            <Route path="/tags/new" element={<NewTag userId={1} />} />
+            <Route path="/tags/edit/:id" element={<NewTag userId={1} />} />
             <Route path="/" element={<HomeComponent />} />
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>

@@ -47,6 +47,32 @@ export const createTask = async (taskData: TaskRequest): Promise<Task> => {
     return data;
 };
 
+export const updateTask = async (taskId: number, taskData: TaskRequest): Promise<Task> => {
+    const response = await fetch(`${baseUrl}/tasks/${taskId}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(taskData),
+    });
+
+    if (!response.ok) {
+        try {
+            // Intentar obtener el mensaje de error del backend
+            const errorData: ErrorResponse = await response.json();
+            console.log("Error updating task:", errorData.message);
+            throw new Error(errorData.message);
+        } catch (parseError) {
+            // Si no se puede parsear la respuesta, usar el statusText
+            console.log("Error updating task:", response.statusText);
+            throw new Error("Failed to update task");
+        }
+    }
+
+    const data = await response.json() as Task;
+    return data;
+};
+
 export const deleteTask = async (taskId: number): Promise<void> => {
     const response = await fetch(`${baseUrl}/tasks/${taskId}`, {
         method: 'DELETE',
@@ -62,6 +88,51 @@ export const deleteTask = async (taskId: number): Promise<void> => {
             // Si no se puede parsear la respuesta, usar el statusText
             console.log("Error deleting task:", response.statusText);
             throw new Error("Failed to delete task");
+        }
+    }
+};
+
+
+export const addTagToTask = async (taskId: number, tagId: number): Promise<void> => {
+    const response = await fetch(`${baseUrl}/tasks/${taskId}/addTag/${tagId}`, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
+
+    if (!response.ok) {
+        try {
+            // Intentar obtener el mensaje de error del backend
+            const errorData: ErrorResponse = await response.json();
+            console.log("Error adding tag to task:", errorData.message);
+            throw new Error(errorData.message);
+        } catch (parseError) {
+            // Si no se puede parsear la respuesta, usar el statusText
+            console.log("Error adding tag to task:", response.statusText);
+            throw new Error("Failed to add tag to task");
+        }
+    }
+};
+
+export const removeTagFromTask = async (taskId: number, tagId: number): Promise<void> => {
+    const response = await fetch(`${baseUrl}/tasks/${taskId}/removeTag/${tagId}`, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
+
+    if (!response.ok) {
+        try {
+            // Intentar obtener el mensaje de error del backend
+            const errorData: ErrorResponse = await response.json();
+            console.log("Error adding tag to task:", errorData.message);
+            throw new Error(errorData.message);
+        } catch (parseError) {
+            // Si no se puede parsear la respuesta, usar el statusText
+            console.log("Error adding tag to task:", response.statusText);
+            throw new Error("Failed to add tag to task");
         }
     }
 };

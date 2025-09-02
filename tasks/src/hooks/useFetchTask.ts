@@ -8,6 +8,7 @@ export interface UseFetchTask {
     task: Task | null;
     loading: boolean;
     error: string | null;
+    refetch : () => Promise<void>;
 }
 
 
@@ -16,21 +17,20 @@ export function useFetchTask (taskId: number): UseFetchTask {
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
 
+    const fetchTask = async () => {
+        try {
+            const data = await getTaskById(taskId);
+            console.log(data);
+            setTask(data);
+        } catch (err: any) {
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
     useEffect(() => {
-        const fetchTask = async () => {
-            try {
-                const data = await getTaskById(taskId);
-                console.log(data);
-                setTask(data);
-            } catch (err: any) {
-                setError(err.message);
-            } finally {
-                setLoading(false);
-            }
-        };
-
         fetchTask();
     }, [taskId]);
 
-    return { task, loading, error };
+    return { task, loading, error, refetch: fetchTask };
 }
