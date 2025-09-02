@@ -3,7 +3,6 @@ import { BrowserRouter, Routes, Route, useParams, useNavigate, Navigate } from "
 
 import "./index.css";
 import { TaskDetails } from "./components/tasks/taskDetails";
-import { NewTask } from "./components/tasks/newTask";
 import NewTag from "./components/tags/newTag";
 import AddTagToTask from "./components/tags/addTagToTask";
 import EditTask from "./components/tasks/editTask";
@@ -16,18 +15,7 @@ const TaskDetailsWrapper = () => {
   return <TaskDetails taskId={taskId} />;
 };
 
-const HomeComponent = () => {
-  const navigate = useNavigate();
-  
-  return (
-    <div className="text-center">
-      <h1 className="text-2xl font-bold text-blue-600 mb-4">Bienvenido a Tasks</h1>
-      <p className="text-gray-600">Selecciona una opción para continuar</p>
-      <button className="btn btn-primary mt-4" onClick={() => navigate("/new")}>Crear nueva tarea</button>
-      <button className="btn btn-primary mt-4 ml-2" onClick={() => navigate("/details/4")}>Ir a Tarea2</button>
-    </div>
-  );
-};
+
 
 const App = () => (
   <BrowserRouter basename="/tasks">
@@ -41,12 +29,10 @@ const App = () => (
           <Routes>
             <Route path="/details/:id" element={<TaskDetailsWrapper />} />
             <Route path="/edit/:id" element={<EditTask />} />
-            <Route path="/new" element={<NewTask />} />
             <Route path="/addTag/:taskId" element={<AddTagToTask userId={1} />} />
             <Route path="/tags/new" element={<NewTag userId={1} />} />
             <Route path="/tags/edit/:id" element={<NewTag userId={1} />} />
-            <Route path="/" element={<HomeComponent />} />
-            <Route path="*" element={<Navigate to="/" />} />
+            <Route path="*" element={<Navigate to="/details/4" />} />
           </Routes>
         </div>
       </div>

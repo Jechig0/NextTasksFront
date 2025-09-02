@@ -2,7 +2,16 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useFetchTask } from "../../hooks/useFetchTask";
 import { ConfirmationModal } from "../comfirmationModal";
-import { deleteTask, removeTagFromTask } from "../../services/Task.service";
+import {
+  formatDate,
+  getPriorityText,
+  handleDeleteTask as deleteTaskHelper,
+  handleRemoveTagFromTask as removeTagHelper,
+  navigateToEditTask,
+  navigateToAddTag,
+  showDeleteConfirmation,
+  hideDeleteConfirmation
+} from "./helpers/taskDetails.helper";
 
 interface TaskDetailsProps {
   taskId: number;
@@ -15,37 +24,14 @@ export const TaskDetails = ({ taskId }: TaskDetailsProps) => {
   const navigate = useNavigate();
 
   const handleDeleteTask = async () => {
-    setIsDeleting(true);
-    try {
-      await deleteTask(taskId);
-      setShowDeleteModal(false);
-
-      // Mostrar mensaje de éxito
-      alert("Tarea eliminada exitosamente");
-
-      // Redirigir a la página principal o lista de tareas
-      navigate("/");
-    } catch (error) {
-      console.error("Error al eliminar la tarea:", error);
-      alert(
-        `Error al eliminar la tarea: ${
-          error instanceof Error ? error.message : "Error desconocido"
-        }`
-      );
-    } finally {
-      setIsDeleting(false);
-    }
+    await deleteTaskHelper(taskId, setIsDeleting, setShowDeleteModal, navigate);
   };
 
   const handleRemoveTagFromTask = async (tagId: number) => {
-    if (!taskId || !tagId) return;
-
     try {
-      // Lógica para eliminar el tag de la tarea
-      await removeTagFromTask(taskId, tagId);
-      refetch();
+      await removeTagHelper(taskId, tagId, refetch);
     } catch (error) {
-      console.error("Error al eliminar tag de la tarea:", error);
+      // Error handling is already done in the helper
     }
   };
 
@@ -73,29 +59,6 @@ export const TaskDetails = ({ taskId }: TaskDetailsProps) => {
       </div>
     );
   }
-
-  const formatDate = (date: Date) => {
-    return new Date(date).toLocaleDateString("es-ES", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-  };
-
-  const getPriorityText = (priority: number) => {
-    switch (priority) {
-      case 1:
-        return "Baja";
-      case 2:
-        return "Media";
-      case 3:
-        return "Alta";
-      case 4:
-        return "Urgente";
-      default:
-        return "Sin prioridad";
-    }
-  };
 
   return (
     <div className="max-w-2xl mx-auto p-6 space-y-6">
@@ -151,7 +114,7 @@ export const TaskDetails = ({ taskId }: TaskDetailsProps) => {
               ))}
               <div
                 className="px-3 py-1 btn text-sm border border-green-700 text-green-700 "
-                onClick={() => navigate(`/addTag/${task.id}`)}
+                onClick={() => navigateToAddTag(task.id, navigate)}
               >
                 +
               </div>
@@ -163,7 +126,7 @@ export const TaskDetails = ({ taskId }: TaskDetailsProps) => {
           (task.tags.length === 0 && (
             <div
               className="px-3 py-1 btn text-sm border border-green-700 text-green-700 "
-              onClick={() => navigate(`/addTag/${task.id}`)}
+              onClick={() => navigateToAddTag(task.id, navigate)}
             >
               +
             </div>
@@ -171,13 +134,15 @@ export const TaskDetails = ({ taskId }: TaskDetailsProps) => {
 
         <div className="border-t border-gray-500 my-4"></div>
         <div className="flex justify-center gap-3">
-          <button className="btn btn-outline" onClick={() => navigate("/")}>
-            Volver
+          <button
+            className="btn btn-primary"
+            onClick={() => navigateToEditTask(task.id, navigate)}
+          >
+            Editar tarea
           </button>
-          <button className="btn btn-primary" onClick={() => navigate(`/edit/${task.id}`)}>Editar tarea</button>
           <button
             className="btn btn-secondary"
-            onClick={() => setShowDeleteModal(true)}
+            onClick={() => showDeleteConfirmation(setShowDeleteModal)}
           >
             Eliminar tarea
           </button>
@@ -192,7 +157,7 @@ export const TaskDetails = ({ taskId }: TaskDetailsProps) => {
         confirmText="Eliminar"
         cancelText="Cancelar"
         onConfirm={handleDeleteTask}
-        onCancel={() => setShowDeleteModal(false)}
+        onCancel={() => hideDeleteConfirmation(setShowDeleteModal)}
         isLoading={isDeleting}
       />
     </div>

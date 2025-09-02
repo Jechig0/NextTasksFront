@@ -1,9 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { Tag } from "../../interfaces/tag.interface";
-import { createTag, updateTag } from "../../services/Tags.service";
-import { Owner } from "../../interfaces/task.interface";
 import { useNavigate, useParams } from "react-router-dom";
 import { useFetchOneTag } from "../../hooks/useFetchOneTag";
+import {
+  predefinedColors,
+  handleCreateOrUpdateTag,
+  resetForm,
+  loadTagDataForEditing,
+  getSubmitButtonText,
+  getPageTitle
+} from "./helpers/newTag.helper";
 
 interface NewTagProps {
   userId: number;
@@ -27,68 +33,29 @@ const NewTag: React.FC<NewTagProps> = ({ userId }) => {
 
   // Efecto para cargar los datos del tag al editar
   useEffect(() => {
-    if (isEditing && tag) {
-      setNewTagName(tag.name);
-      setNewTagColor(tag.colorCode);
-    }
+    loadTagDataForEditing(tag, isEditing, setNewTagName, setNewTagColor);
   }, [isEditing, tag]);
 
   const handleNavigation = () => {
     navigate(-1); // Navegar hacia atrás como la flecha del navegador
   };
 
-  // Colores predefinidos para los tags
-  const predefinedColors = [
-    "#3B82F6", // Blue
-    "#EF4444", // Red
-    "#10B981", // Green
-    "#F59E0B", // Yellow
-    "#8B5CF6", // Purple
-    "#F97316", // Orange
-    "#06B6D4", // Cyan
-    "#84CC16", // Lime
-    "#EC4899", // Pink
-    "#6B7280", // Gray
-  ];
-
   const handleCreateNewTag = async () => {
-    if (!newTagName.trim()) {
-      setError("El nombre del tag es requerido");
-      return;
-    }
-
     try {
       setIsSubmitting(true);
       setError("");
 
-      if (isEditing && tagId) {
-        // Actualizar tag existente
-        await updateTag(tagId, {
-          name: newTagName.trim(),
-          colorCode: newTagColor,
-        });
-      } else {
-        // Crear nuevo tag
-        await createTag({
-          name: newTagName.trim(),
-          colorCode: newTagColor,
-          owner: { id: userId } as Owner,
-        });
-      }
-
+      await handleCreateOrUpdateTag(isEditing, tagId, newTagName, newTagColor, userId);
       navigate(-1); // Volver a la página anterior después de crear/editar el tag
-    } catch (err) {
-      setError(isEditing ? "Error al actualizar el tag" : "Error al crear el tag");
-      console.error(isEditing ? "Error updating tag:" : "Error creating tag:", err);
+    } catch (err: any) {
+      setError(err.message);
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const handleCancel = () => {
-    setNewTagName("");
-    setNewTagColor("#3B82F6");
-    setError("");
+    resetForm(setNewTagName, setNewTagColor, setError);
     navigate(-1); // Volver a la página anterior
   };
 
@@ -106,7 +73,7 @@ const NewTag: React.FC<NewTagProps> = ({ userId }) => {
     <div className="card bg-base-100 shadow-xl max-w-2xl mx-auto">
       <div className="card-body">
         <h2 className="card-title text-2xl mb-6">
-          {isEditing ? "Editar Tag" : "Crear Nuevo Tag"}
+          {getPageTitle(isEditing)}
         </h2>
 
         {(error || fetchError) && (
@@ -190,10 +157,10 @@ const NewTag: React.FC<NewTagProps> = ({ userId }) => {
               {isSubmitting ? (
                 <>
                   <span className="loading loading-spinner loading-sm"></span>
-                  {isEditing ? "Actualizando..." : "Creando..."}
+                  {getSubmitButtonText(isSubmitting, isEditing)}
                 </>
               ) : (
-                isEditing ? "Actualizar Tag" : "Crear Tag"
+                getSubmitButtonText(isSubmitting, isEditing)
               )}
             </button>
           </div>

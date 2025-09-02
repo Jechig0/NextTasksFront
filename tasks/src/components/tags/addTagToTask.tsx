@@ -1,9 +1,16 @@
 import React, { useState } from "react";
 import { Tag } from "../../interfaces/tag.interface";
 import { useFetchTags } from "../../hooks/useFetchTags";
-import { Navigate, useNavigate, useParams } from "react-router-dom";
-import { addTagToTask } from "../../services/Task.service";
+import { useNavigate, useParams } from "react-router-dom";
 import { useFetchTask } from "../../hooks/useFetchTask";
+import { 
+  handleSelectExistingTag as selectTag,
+  handleCancel as cancelSelection,
+  handleEdit as editTag,
+  handleDelete as deleteSelectedTag,
+  handleAddTagToTask as addSelectedTagToTask,
+  filterAvailableTags 
+} from "./helpers/addTagToTask.helper";
 
 interface AddTagToTaskProps {
   userId: number;
@@ -18,43 +25,40 @@ const AddTagToTask: React.FC<AddTagToTaskProps> = ({ userId }) => {
     tags: existingTags,
     loading,
     error: fetchError,
+    refetch
   } = useFetchTags(userId);
 
   const { task } = useFetchTask(Number(taskId));
 
-  const filteredTags = existingTags.filter(
-    (tag) => !task?.tags.some((t) => t.id === tag.id)
-  );
+  const filteredTags = filterAvailableTags(existingTags, task?.tags);
 
   const [selectedTag, setSelectedTag] = useState<Tag | null>(null);
 
   const handleSelectExistingTag = (tag: Tag) => {
-    if (selectedTag?.id === tag.id) {
-      setSelectedTag(null);
-      return;
-    }
-    setSelectedTag(tag);
+    selectTag(tag, selectedTag, setSelectedTag);
   };
 
   const handleCancel = () => {
-    setSelectedTag(null);
-    navigate(`/details/${taskId}`);
+    cancelSelection(setSelectedTag, navigate, taskId!);
   };
 
   const handleEdit = () => {
-    if (!selectedTag) return;
-    navigate(`/tags/edit/${selectedTag.id}`);
+    editTag(selectedTag, navigate);
+  };
+
+  const handleDelete = async () => {
+    try {
+      await deleteSelectedTag(selectedTag, taskId, refetch, setSelectedTag);
+    } catch (error) {
+      // El error ya se maneja en el helper
+    }
   };
 
   const handleAddTagToTask = async () => {
-    if (!selectedTag || !taskId) return;
-
     try {
-      // Lógica para añadir el tag a la tarea
-      await addTagToTask(Number(taskId), selectedTag.id);
-      navigate(`/details/${taskId}`);
+      await addSelectedTagToTask(selectedTag, taskId, navigate);
     } catch (error) {
-      console.error("Error al añadir tag a la tarea:", error);
+      // El error ya se maneja en el helper
     }
   };
 
@@ -122,7 +126,7 @@ const AddTagToTask: React.FC<AddTagToTaskProps> = ({ userId }) => {
             <button className="btn btn-primary" onClick={handleEdit}>
               Editar Tag
             </button>
-            <button className="btn btn-error">Eliminar Tag</button>
+            <button className="btn btn-error" onClick={handleDelete}>Eliminar Tag</button>
           </div>
         )}
 

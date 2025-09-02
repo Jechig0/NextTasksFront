@@ -1,8 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Task, TaskRequest } from "../../interfaces/task.interface";
-import { updateTask } from "../../services/Task.service";
 import { useFetchTask } from "../../hooks/useFetchTask";
+import {
+  validateTaskForm,
+  loadTaskDataForEditing,
+  handleTaskSubmit,
+  navigateToTaskDetails,
+  navigateBack,
+  resetFormErrors,
+  getPriorityOptions,
+  getSubmitButtonText,
+  getCurrentDateMin
+} from "./helpers/editTask.helper";
 
 interface EditTaskProps {}
 
@@ -25,52 +34,27 @@ const EditTask: React.FC<EditTaskProps> = () => {
 
   // Efecto para cargar los datos de la tarea al componente
   useEffect(() => {
-    if (task) {
-      setTitle(task.title);
-      setDescription(task.description);
-      // Convertir la fecha al formato requerido por el input date
-      setDueDate(new Date(task.dueDate).toISOString().split("T")[0]);
-      setPriority(task.priority);
-    }
+    loadTaskDataForEditing(task, setTitle, setDescription, setDueDate, setCompletionDate, setPriority);
   }, [task]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!title.trim()) {
-      setError("El título es requerido");
-      return;
-    }
-
-    if (!dueDate) {
-      setError("La fecha de vencimiento es requerida");
-      return;
-    }
-
     try {
       setIsSubmitting(true);
-      setError("");
+      resetFormErrors(setError);
 
-      const taskData: TaskRequest = {
-        title: title.trim(),
-        description: description.trim(),
-        dueDate: new Date(dueDate).toISOString(),
-        priority,
-        boardId: task?.board.id || 1, // Usar el board actual de la tarea
-      };
-
-      await updateTask(taskId, taskData);
-      navigate(`/details/${taskId}`); // Navegar a los detalles de la tarea
+      await handleTaskSubmit(taskId, title, description, dueDate, completionDate, priority, task);
+      navigateToTaskDetails(taskId, navigate);
     } catch (err: any) {
-      setError(err.message || "Error al actualizar la tarea");
-      console.error("Error updating task:", err);
+      setError(err.message);
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const handleCancel = () => {
-    navigate(-1);
+    navigateBack(navigate);
   };
 
   // Loading state
@@ -158,7 +142,7 @@ const EditTask: React.FC<EditTaskProps> = () => {
                 onChange={(e) => setDueDate(e.target.value)}
                 className="input input-bordered w-full"
                 required
-                min={new Date().toISOString().split("T")[0]} // No permitir fechas pasadas
+                min={getCurrentDateMin()} // No permitir fechas pasadas
               />
             </div>
 
@@ -173,7 +157,7 @@ const EditTask: React.FC<EditTaskProps> = () => {
                 value={completionDate}
                 onChange={(e) => setCompletionDate(e.target.value)}
                 className="input input-bordered w-full"
-                min={new Date().toISOString().split("T")[0]} // No permitir fechas pasadas
+                min={getCurrentDateMin()} // No permitir fechas pasadas
               />
             </div>
 
@@ -187,10 +171,11 @@ const EditTask: React.FC<EditTaskProps> = () => {
                 onChange={(e) => setPriority(parseInt(e.target.value))}
                 className="select select-bordered w-full"
               >
-                <option value={1}>Baja</option>
-                <option value={2}>Media</option>
-                <option value={3}>Alta</option>
-                <option value={4}>Urgente</option>
+                {getPriorityOptions().map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
               </select>
             </div>
           </div>
@@ -212,10 +197,10 @@ const EditTask: React.FC<EditTaskProps> = () => {
               {isSubmitting ? (
                 <>
                   <span className="loading loading-spinner loading-sm"></span>
-                  Actualizando...
+                  {getSubmitButtonText(isSubmitting)}
                 </>
               ) : (
-                "Actualizar Tarea"
+                getSubmitButtonText(isSubmitting)
               )}
             </button>
           </div>
