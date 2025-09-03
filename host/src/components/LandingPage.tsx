@@ -21,7 +21,7 @@ const LandingPage = () => (
       </p>
 
       <Link
-        to=""
+        to="/dashboard"
         className="btn btn-primary"
       >
         Iniciar Sesión

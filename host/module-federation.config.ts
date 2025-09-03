@@ -2,7 +2,8 @@ export const mfConfig = {
   name: "host",
   exposes: {},
   remotes : {
-    tasks: "tasks@http://localhost:8083/remoteEntry.js"
+    tasks: "tasks@http://localhost:8083/remoteEntry.js",
+    dashboard: "dashboard@http://localhost:8084/remoteEntry.js"
   },
   shared: {
     react: { singleton: true, requiredVersion: "^19.0.0" },

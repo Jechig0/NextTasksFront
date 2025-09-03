@@ -10,6 +10,9 @@ const App = () => (
   </>
 );
 
+
+export default App;
+
 const root = ReactDOM.createRoot(document.getElementById("app") as HTMLElement);
 
 root.render(
