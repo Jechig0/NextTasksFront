@@ -27,6 +27,7 @@ const TasksApp = () => (
           <Route path="/addTag/:taskId" element={<AddTagToTask userId={1} />} />
           <Route path="/tags/new" element={<NewTag userId={1} />} />
           <Route path="/tags/edit/:id" element={<NewTag userId={1} />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </div>
     </div>
