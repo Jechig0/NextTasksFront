@@ -1,17 +1,6 @@
 import { updateTask } from "../../../services/Task.service";
-import { TaskRequest } from "../../../interfaces/task.interface";
+import { Board, Task, TaskRequest } from "../../../interfaces/task.interface";
 
-export const validateTaskForm = (title: string, dueDate: string): string | null => {
-  if (!title.trim()) {
-    return "El título es requerido";
-  }
-
-  if (!dueDate) {
-    return "La fecha de vencimiento es requerida";
-  }
-
-  return null;
-};
 
 export const loadTaskDataForEditing = (
   task: any,
@@ -26,7 +15,11 @@ export const loadTaskDataForEditing = (
     setDescription(task.description);
     // Convertir la fecha al formato requerido por el input date
     setDueDate(new Date(task.dueDate).toISOString().split("T")[0]);
-    setCompletionDate(task.completionDate ? new Date(task.completionDate).toISOString().split("T")[0] : "");
+    setCompletionDate(
+      task.completionDate
+        ? new Date(task.completionDate).toISOString().split("T")[0]
+        : ""
+    );
     setPriority(task.priority);
   }
 };
@@ -38,21 +31,20 @@ export const handleTaskSubmit = async (
   dueDate: string,
   completionDate: string,
   priority: number,
-  task: any
+  task: Partial<Task>
 ): Promise<void> => {
-  const validationError = validateTaskForm(title, dueDate);
-  if (validationError) {
-    throw new Error(validationError);
-  }
+ 
 
   try {
-    const taskData: TaskRequest = {
+    const taskData: Partial<Task> = {
       title: title.trim(),
       description: description.trim(),
-      dueDate: new Date(dueDate).toISOString(),
-      completionDate: completionDate ? new Date(completionDate).toISOString() : null,
+      dueDate: new Date(dueDate),
+      completionDate: completionDate
+        ? new Date(completionDate)
+        : undefined,
       priority,
-      boardId: task?.board.id || 1, // Usar el board actual de la tarea
+      board: task?.board ?? {} as Board, // Usar el board actual de la tarea
     };
 
     await updateTask(taskId, taskData);
@@ -63,8 +55,17 @@ export const handleTaskSubmit = async (
   }
 };
 
-export const navigateToTaskDetails = (taskId: number, navigate: (path: string) => void): void => {
-  navigate(`/details/${taskId}`);
+export const navigateToTaskDetails = (
+  taskId: number,
+  navigate: (path: string) => void
+): void => {
+  const isStandalone = window.location.port === "8083"; // Puerto específico del micro-frontend tasks
+
+  if (isStandalone) {
+    navigate(`/details/${taskId}`);
+  } else {
+    navigate(`/tasks/details/${taskId}`);
+  }
 };
 
 export const navigateBack = (navigate: (delta: number) => void): void => {
@@ -79,13 +80,11 @@ export const getPriorityOptions = () => [
   { value: 1, label: "Baja" },
   { value: 2, label: "Media" },
   { value: 3, label: "Alta" },
-  { value: 4, label: "Urgente" }
+  { value: 4, label: "Urgente" },
 ];
 
 export const getSubmitButtonText = (isSubmitting: boolean): string => {
   return isSubmitting ? "Actualizando..." : "Actualizar Tarea";
 };
 
-export const getCurrentDateMin = (): string => {
-  return new Date().toISOString().split("T")[0];
-};
+

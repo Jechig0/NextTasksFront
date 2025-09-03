@@ -23,13 +23,11 @@ export const getPriorityText = (priority: number): string => {
   }
 };
 
-
-
 export const handleDeleteTask = async (
   taskId: number,
   setIsDeleting: (loading: boolean) => void,
   setShowDeleteModal: (show: boolean) => void,
-  navigate: (path: string) => void,
+  navigate: (path: string) => void
 ): Promise<void> => {
   setIsDeleting(true);
   try {
@@ -69,18 +67,44 @@ export const handleRemoveTagFromTask = async (
   }
 };
 
-export const navigateToEditTask = (taskId: number, navigate: (path: string) => void): void => {
-  navigate(`/edit/${taskId}`);
+export const navigateToEditTask = (
+  taskId: number,
+  navigate: (path: string) => void
+): void => {
+  const isStandalone = window.location.port === "8083"; // Puerto específico del micro-frontend tasks
+
+  if (isStandalone) {
+    navigate(`/edit/${taskId}`);
+  } else {
+    navigate(`/tasks/edit/${taskId}`);
+  }
+
+  
+
 };
 
-export const navigateToAddTag = (taskId: number, navigate: (path: string) => void): void => {
-  navigate(`/addTag/${taskId}`);
+export const navigateToAddTag = (
+  taskId: number,
+  navigate: (path: string) => void
+): void => {
+  const isStandalone = window.location.port === "8083"; // Puerto específico del micro-frontend tasks
+
+  if (isStandalone) {
+    navigate(`/addTag/${taskId}`);
+  } else {
+    // Usar ruta absoluta desde el host para evitar rutas relativas
+    navigate(`/tasks/addTag/${taskId}`);
+  }
 };
 
-export const showDeleteConfirmation = (setShowDeleteModal: (show: boolean) => void): void => {
+export const showDeleteConfirmation = (
+  setShowDeleteModal: (show: boolean) => void
+): void => {
   setShowDeleteModal(true);
 };
 
-export const hideDeleteConfirmation = (setShowDeleteModal: (show: boolean) => void): void => {
+export const hideDeleteConfirmation = (
+  setShowDeleteModal: (show: boolean) => void
+): void => {
   setShowDeleteModal(false);
 };

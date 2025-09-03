@@ -1,16 +1,16 @@
 import ReactDOM from "react-dom/client";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Tasks from "tasks/tasks";
+import LandingPage from "./components/LandingPage";
 
 import "./index.css";
-import { BrowserRouter } from "react-router-dom";
 
 const App = () => (
   <BrowserRouter>
-    <div className="mt-10 text-3xl mx-auto max-w-6xl">
-      <div>Name: host</div>
-      <div>Framework: react-19</div>
-      <Tasks />
-    </div>
+    <Routes>
+      <Route path="/" element={<LandingPage />} />
+      <Route path="/tasks/*" element={<Tasks />} />
+    </Routes>
   </BrowserRouter>
 );
 
