@@ -1,5 +1,12 @@
 export const mfConfig = {
   name: "host",
   exposes: {},
-  shared: ["react", "react-dom"],
+  remotes : {
+    tasks: "tasks@http://localhost:8083/remoteEntry.js"
+  },
+  shared: {
+    react: { singleton: true, requiredVersion: "^19.0.0" },
+    "react-dom": { singleton: true, requiredVersion: "^19.0.0" },
+    "react-router-dom": { singleton: true }
+  },
 };
