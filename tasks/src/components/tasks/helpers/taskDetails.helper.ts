@@ -1,0 +1,86 @@
+import { deleteTask, removeTagFromTask } from "../../../services/Task.service";
+
+export const formatDate = (date: Date): string => {
+  return new Date(date).toLocaleDateString("es-ES", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+};
+
+export const getPriorityText = (priority: number): string => {
+  switch (priority) {
+    case 1:
+      return "Baja";
+    case 2:
+      return "Media";
+    case 3:
+      return "Alta";
+    case 4:
+      return "Urgente";
+    default:
+      return "Sin prioridad";
+  }
+};
+
+
+
+export const handleDeleteTask = async (
+  taskId: number,
+  setIsDeleting: (loading: boolean) => void,
+  setShowDeleteModal: (show: boolean) => void,
+  navigate: (path: string) => void,
+): Promise<void> => {
+  setIsDeleting(true);
+  try {
+    await deleteTask(taskId);
+    setShowDeleteModal(false);
+
+    // Mostrar mensaje de éxito
+    alert("Tarea eliminada exitosamente");
+
+    // Redirigir a la página principal o lista de tareas
+    navigate("/");
+  } catch (error) {
+    console.error("Error al eliminar la tarea:", error);
+    alert(
+      `Error al eliminar la tarea: ${
+        error instanceof Error ? error.message : "Error desconocido"
+      }`
+    );
+  } finally {
+    setIsDeleting(false);
+  }
+};
+
+export const handleRemoveTagFromTask = async (
+  taskId: number,
+  tagId: number,
+  refetch: () => Promise<void>
+): Promise<void> => {
+  if (!taskId || !tagId) return;
+
+  try {
+    await removeTagFromTask(taskId, tagId);
+    await refetch();
+  } catch (error) {
+    console.error("Error al eliminar tag de la tarea:", error);
+    throw error;
+  }
+};
+
+export const navigateToEditTask = (taskId: number, navigate: (path: string) => void): void => {
+  navigate(`/edit/${taskId}`);
+};
+
+export const navigateToAddTag = (taskId: number, navigate: (path: string) => void): void => {
+  navigate(`/addTag/${taskId}`);
+};
+
+export const showDeleteConfirmation = (setShowDeleteModal: (show: boolean) => void): void => {
+  setShowDeleteModal(true);
+};
+
+export const hideDeleteConfirmation = (setShowDeleteModal: (show: boolean) => void): void => {
+  setShowDeleteModal(false);
+};
