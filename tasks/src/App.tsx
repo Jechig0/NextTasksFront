@@ -1,5 +1,5 @@
 import ReactDOM from "react-dom/client";
-import { BrowserRouter, Routes, Route, useParams, useNavigate, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useParams, Navigate } from "react-router-dom";
 
 import "./index.css";
 import { TaskDetails } from "./components/tasks/taskDetails";
@@ -15,31 +15,33 @@ const TaskDetailsWrapper = () => {
   return <TaskDetails taskId={taskId} />;
 };
 
-
-
-const App = () => (
-  <BrowserRouter basename="/tasks">
-    <div className="min-h-screen w-full relative bg-gradient-to-br from-blue-100 to-purple-100">
-      {/* Fondo con blur */}
-      <div className="absolute inset-0 bg-white/20 backdrop-blur-sm"></div>
-      
-      {/* Contenido centrado */}
-      <div className="relative z-10 min-h-screen flex items-center justify-center">
-        <div className="bg-white/80 backdrop-blur-md rounded-2xl shadow-xl p-8 max-w-md w-full mx-4 text-center">
-          <Routes>
-            <Route path="/details/:id" element={<TaskDetailsWrapper />} />
-            <Route path="/edit/:id" element={<EditTask />} />
-            <Route path="/addTag/:taskId" element={<AddTagToTask userId={1} />} />
-            <Route path="/tags/new" element={<NewTag userId={1} />} />
-            <Route path="/tags/edit/:id" element={<NewTag userId={1} />} />
-            <Route path="*" element={<Navigate to="/details/4" />} />
-          </Routes>
-        </div>
+const TasksApp = () => (
+  <div className="min-h-screen w-full relative bg-gradient-to-br from-blue-100 to-purple-100">
+    <div className="absolute inset-0 bg-white/20 backdrop-blur-sm"></div>
+    
+    <div className="relative z-10 min-h-screen flex items-center justify-center">
+      <div className="bg-white/80 backdrop-blur-md rounded-2xl shadow-xl p-8 max-w-md w-full mx-4 text-center">
+        <Routes>
+          <Route path="/tasks/details/:id" element={<TaskDetailsWrapper />} />
+          <Route path="/tasks/edit/:id" element={<EditTask />} />
+          <Route path="/tasks/addTag/:taskId" element={<AddTagToTask userId={1} />} />
+          <Route path="/tasks/tags/new" element={<NewTag userId={1} />} />
+          <Route path="/tasks/tags/edit/:id" element={<NewTag userId={1} />} />
+          <Route path="/tasks/*" element={<Navigate to="/tasks/details/4" />} />
+        </Routes>
       </div>
     </div>
-  </BrowserRouter>
+  </div>
 );
 
-const root = ReactDOM.createRoot(document.getElementById("app") as HTMLElement);
+export default TasksApp;
 
-root.render(<App />);
+// Para desarrollo standalone
+if (document.getElementById("app")) {
+  const root = ReactDOM.createRoot(document.getElementById("app") as HTMLElement);
+  root.render(
+    <BrowserRouter>
+      <TasksApp />
+    </BrowserRouter>
+  );
+}
