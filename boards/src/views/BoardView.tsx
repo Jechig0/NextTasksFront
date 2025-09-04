@@ -3,7 +3,7 @@ import { DragDropContext, DropResult } from "react-beautiful-dnd";
 import { ListColumn } from "../components/ListColumn";
 import { Column } from "../interfaces/column";
 import { Board } from "../interfaces/board";
-import { createListColumn, fetchBoard, fetchListColumns } from "../services/boardsService";
+import { createListColumn, fetchBoard, fetchListColumns, updateTaskPosition } from "../services/boardsService";
 
 export default function BoardView({ boardId }: { boardId: number }) {
     const [loading, setLoading] = useState(true);
@@ -11,6 +11,7 @@ export default function BoardView({ boardId }: { boardId: number }) {
     const [columns, setColumns] = useState<Column[]>([]);
     const [isAddingList, setIsAddingList] = useState(false);
     const [newListName, setNewListName] = useState("");
+    const [refreshKey, setRefreshKey] = useState(0);
 
     useEffect(() => {
         const loadBoardData = async () => {
@@ -28,7 +29,7 @@ export default function BoardView({ boardId }: { boardId: number }) {
         };
         
         loadBoardData();
-    }, [boardId]);
+    }, [boardId, refreshKey]);
 
     const handleEditTask = (taskId: number) => {
         window.dispatchEvent(new CustomEvent('openTaskEditor', { 
@@ -65,35 +66,18 @@ export default function BoardView({ boardId }: { boardId: number }) {
 
         try {
             // Here you would implement the API call to update task position
-            // await updateTaskPosition({
-            //     taskId: Number(draggableId),
-            //     sourceColumnId: Number(source.droppableId),
-            //     destinationColumnId: Number(destination.droppableId),
-            //     newIndex: destination.index
-            // });
+            await updateTaskPosition(Number(draggableId), Number(destination.droppableId));
 
             // For now, we'll just update the local state
             // This should be replaced with the actual response from the backend
-            const newColumns = columns.map(column => {
-                if (column.id === Number(source.droppableId)) {
-                    const newTaskIds = [...(column.tasksId || [])];
-                    newTaskIds.splice(source.index, 1);
-                    return { ...column, tasksId: newTaskIds };
-                }
-                if (column.id === Number(destination.droppableId)) {
-                    const newTaskIds = [...(column.tasksId || [])];
-                    newTaskIds.splice(destination.index, 0, Number(draggableId));
-                    return { ...column, tasksId: newTaskIds };
-                }
-                return column;
-            });
+            setRefreshKey(prev => prev + 1);
 
-            setColumns(newColumns);
         } catch (error) {
             console.error('Error updating task position:', error);
             // Refresh the columns data from the server in case of error
             const columnsData = await fetchListColumns(boardId);
             setColumns(columnsData);
+            setRefreshKey(prev => prev + 1);
         }
     };
 

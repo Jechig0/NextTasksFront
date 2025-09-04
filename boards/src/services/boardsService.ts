@@ -87,3 +87,14 @@ export async function createTask(title: string, column: {id: number}, token?: st
     if (!res.ok) throw new Error('Error creating task');
     return res.json();
 }
+
+export async function updateTaskPosition(taskId:number, columnId:number, token?:string): Promise<void> {
+    const res = await fetch(`${API_BASE}/tasks/${taskId}/column/${columnId}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            ...(token ? { Authorization: `Bearer ${token}` } : {})
+        },
+    });
+    if (!res.ok) throw new Error('Error updating task position');
+}
