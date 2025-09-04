@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Droppable } from "react-beautiful-dnd";
 import { Column } from "../interfaces/column";
 import { Task } from "../interfaces/task";
 import { TaskCard } from "./TaskCard";
+import { createTask, fetchTasks } from "../services/boardsService";
 
 interface ListColumnProps {
     list: Column;
@@ -16,17 +17,33 @@ export const ListColumn: React.FC<ListColumnProps> = ({
     const [isAddingTask, setIsAddingTask] = useState(false);
     const [newTaskTitle, setNewTaskTitle] = useState("");
     const [tasks, setTasks] = useState<Task[]>([]); // Esto debería venir de un estado global o prop
+    const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+            const loadListData = async () => {
+                try {
+                    setLoading(true);
+                    const tasksData = await fetchTasks(list.id);
+                    setTasks(tasksData);
+                } catch (error) {
+                    console.error('Error loading board data:', error);
+                } finally {
+                    setLoading(false);
+                }
+            };
+            
+            loadListData();
+        }, [list.id]);
 
     const handleAddTask = async () => {
         if (!newTaskTitle.trim()) return;
 
         try {
-            // Aquí deberías hacer la llamada al API para crear la tarea
-            // const newTask = await createTask({
-            //     title: newTaskTitle.trim(),
-            //     columnId: list.id
-            // });
-            // setTasks([...tasks, newTask]);
+            //Aquí deberías hacer la llamada al API para crear la tarea
+            const newTask = await createTask(newTaskTitle.trim(),{            
+                id: list.id
+            });
+            setTasks([...tasks, newTask]);
             setNewTaskTitle("");
             setIsAddingTask(false);
         } catch (error) {
@@ -78,7 +95,7 @@ export const ListColumn: React.FC<ListColumnProps> = ({
                         <svg className="w-4 h-4" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} stroke="currentColor" viewBox="0 0 24 24">
                             <path d="M12 4v16m8-8H4" />
                         </svg>
-                        Add card
+                        Añadir
                     </button>
                 ) : (
                     <div className="space-y-2">
@@ -91,7 +108,7 @@ export const ListColumn: React.FC<ListColumnProps> = ({
                                     handleAddTask();
                                 }
                             }}
-                            placeholder="Enter card title..."
+                            placeholder="Titulo"
                             className="w-full p-2 rounded border border-gray-300 focus:border-sky-500 focus:ring-1 focus:ring-sky-500 min-h-[60px] resize-none"
                             autoFocus
                         />
@@ -100,7 +117,7 @@ export const ListColumn: React.FC<ListColumnProps> = ({
                                 onClick={handleAddTask} 
                                 className="px-3 py-1.5 rounded bg-sky-600 text-white text-sm hover:bg-sky-700 transition-colors"
                             >
-                                Add card
+                                Guardar
                             </button>
                             <button 
                                 onClick={() => { 
@@ -109,7 +126,7 @@ export const ListColumn: React.FC<ListColumnProps> = ({
                                 }} 
                                 className="px-3 py-1.5 rounded text-sm hover:bg-gray-100 transition-colors"
                             >
-                                Cancel
+                                Cancelar
                             </button>
                         </div>
                     </div>

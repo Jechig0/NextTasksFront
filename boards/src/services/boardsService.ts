@@ -1,5 +1,6 @@
 import { Board } from "../interfaces/board";
 import { Column } from "../interfaces/column";
+import { Task } from "../interfaces/task";
 
 const API_BASE = 'http://localhost:8080';
 
@@ -50,7 +51,6 @@ export async function fetchListColumns(boardId: number, token?: string): Promise
 }
 
 export async function createListColumn(payload: { name: string, board: {id: number} } ,token?: string): Promise<Column> {
-    payload.board = payload.board ? payload.board : {id: 1};
     const boardId = payload.board.id
     const res = await fetch(`${API_BASE}/boards/${boardId}/columns/new`, {
         method: 'POST',
@@ -61,5 +61,29 @@ export async function createListColumn(payload: { name: string, board: {id: numb
         body: JSON.stringify(payload)
     });
     if (!res.ok) throw new Error('Error creating list column');
+    return res.json();
+}
+
+export async function fetchTasks(columnId: number, token?: string): Promise<Task[]> {
+    const res = await fetch(`${API_BASE}/tasks/${columnId}`, {
+        headers: {
+            'Content-Type': 'application/json',
+            ...(token ? { Authorization: `Bearer ${token}` } : {})
+        }
+    });
+    if (!res.ok) throw new Error('Error fetching tasks');
+    return res.json();
+}
+
+export async function createTask(title: string, column: {id: number}, token?: string): Promise<Task> {
+    const res = await fetch(`${API_BASE}/tasks`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            ...(token ? { Authorization: `Bearer ${token}` } : {})
+        },
+        body: JSON.stringify({ title, column })
+    });
+    if (!res.ok) throw new Error('Error creating task');
     return res.json();
 }

@@ -14,7 +14,7 @@ const Home: React.FC = () => {
 const BoardPage: React.FC = () => {
   const { id } = useParams<{ id: number }>(); // 👈 forzamos tipado
   if (!id) return <div>Board ID no proporcionado</div>;
-  return <BoardView boardId={id} />;
+  return <BoardView boardId={(id)} />;
 };
 
 const App = () => (

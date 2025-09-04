@@ -42,7 +42,7 @@ export default function BoardView({ boardId }: { boardId: number }) {
         try {
             const newColumn = await createListColumn({ 
                 name: newListName,
-                boardId: board.id
+                board: { id: board.id }
             });
             
             setColumns([...columns, newColumn]);
