@@ -9,9 +9,15 @@ return (
     <div className="mt-3 flex justify-end">
     <button
         onClick={() => onOpen?.((board.id))}
-        className="px-3 py-1 rounded bg-sky-500 text-white text-sm"
+        className="px-3 py-1 rounded bg-sky-500 hover:bg-sky-900 text-white text-sm"
     >
     Abrir
+    </button>
+    <button
+        onClick={() => alert('Funcionalidad de editar no implementada')}
+        className="ml-2 px-3 py-1 rounded bg-red-500 text-sm text-white hover:bg-red-700"
+    >
+        Borrar
     </button>
         </div>
     </div>
