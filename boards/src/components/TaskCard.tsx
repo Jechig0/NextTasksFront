@@ -12,7 +12,7 @@ interface TaskCardProps {
 export const TaskCard: React.FC<TaskCardProps> = ({ task, index, onEdit }) => {
     if(!task) return null;
     return (
-        <Draggable draggableId={task.id} index={index}>
+        <Draggable draggableId={task.id.toString()} index={index}>
             {(provided, snapshot) => (
                 <div
                     ref={provided.innerRef}

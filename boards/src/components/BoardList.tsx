@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Board } from '../interfaces/board';
-//import { fetchBoards, createBoard } from '../services/boardsService';
-import { fetchBoardsMock as fetchBoards, createBoardMock as createBoard } from "../services/mocks/boardsService.mock";
+import { fetchBoards, createBoard } from '../services/boardsService';
+//import { fetchBoardsMock as fetchBoards, createBoardMock as createBoard } from "../services/mocks/boardsService.mock";
 import { BoardCard } from './BoardCard';
 
 
-export const BoardList: React.FC<{ token?: string; onOpenBoard?: (id: string) => void }> = ({ token, onOpenBoard }) => {
+export const BoardList: React.FC<{ token?: string; onOpenBoard?: (id: number) => void }> = ({ token, onOpenBoard }) => {
     const [boards, setBoards] = useState<Board[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -17,8 +17,10 @@ export const BoardList: React.FC<{ token?: string; onOpenBoard?: (id: string) =>
         fetchBoards()
             .then((b) => {
                 // Sort boards by ID before setting state
-                const sortedBoards = [...b].sort((a, b) => a.id.localeCompare(b.id));
-                setBoards(sortedBoards);
+                if (b.length > 1) {
+                    const sortedBoards = [...b].sort((a, b) => a.id - b.id);
+                    setBoards(sortedBoards);
+                }
             })
             .catch((e) => setError(String(e)))
             .finally(() => setLoading(false));
@@ -34,7 +36,7 @@ export const BoardList: React.FC<{ token?: string; onOpenBoard?: (id: string) =>
                 description: newBoard.description.trim()
             });
             // Sort boards when adding new board
-            setBoards((prev) => [...prev, created].sort((a, b) => a.id.localeCompare(b.id)));
+            setBoards((prev) => [...prev, created].sort((a, b) => a.id - b.id));
             setIsCreating(false);
             setNewBoard({ name: '', description: '' });
         } catch (e) {

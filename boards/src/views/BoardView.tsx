@@ -1,115 +1,107 @@
 import React, { useEffect, useState } from "react";
 import { DragDropContext, DropResult } from "react-beautiful-dnd";
-import { BoardDetail } from "../interfaces/boardDetail";
-import { fetchBoardDetailMock, createListMock, createTaskMock, moveTaskMock } from "../services/mocks/boardDetail.mock";
 import { ListColumn } from "../components/ListColumn";
-import { useParams } from "react-router-dom";
+import { Column } from "../interfaces/column";
+import { Board } from "../interfaces/board";
+import { createListColumn, fetchBoard, fetchListColumns } from "../services/boardsService";
 
-export const BoardView: React.FC<{ boardId?: string }> = () => {
-    const { id } = useParams<{ id: string }>();
-    const boardId = id ?? "1";
-    const [board, setBoard] = useState<BoardDetail | null>(null);
+export default function BoardView({ boardId }: { boardId: number }) {
     const [loading, setLoading] = useState(true);
+    const [board, setBoard] = useState<Board | null>(null);
+    const [columns, setColumns] = useState<Column[]>([]);
     const [isAddingList, setIsAddingList] = useState(false);
     const [newListName, setNewListName] = useState("");
 
-
     useEffect(() => {
-        setLoading(true);
-        fetchBoardDetailMock(boardId).then((b) => setBoard(b)).catch(console.error).finally(() => setLoading(false));
+        const loadBoardData = async () => {
+            try {
+                setLoading(true);
+                const boardData = await fetchBoard(boardId);
+                const columnsData = await fetchListColumns(boardId);
+                setBoard(boardData);
+                setColumns(columnsData);
+            } catch (error) {
+                console.error('Error loading board data:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        
+        loadBoardData();
     }, [boardId]);
 
-    const handleEditTask = (taskId: string) => {
-        // Here you would integrate with your task microfrontend
-        // For example:
+    const handleEditTask = (taskId: number) => {
         window.dispatchEvent(new CustomEvent('openTaskEditor', { 
             detail: { taskId, boardId }
         }));
     };
 
-    const handleAddList = async () => {
-        if (!newListName.trim()) return;
-        const newList = await createListMock(boardId, newListName.trim());
-        setBoard((prev) => prev ? { ...prev, lists: [...prev.lists, newList] } : prev);
-        setNewListName("");
-        setIsAddingList(false);
+    const handleAddColumn = async () => {
+        if (!newListName.trim() || !board) return;
+
+        try {
+            const newColumn = await createListColumn({ 
+                name: newListName,
+                boardId: board.id
+            });
+            
+            setColumns([...columns, newColumn]);
+            setIsAddingList(false);
+            setNewListName("");
+        } catch (error) {
+            console.error('Error creating column:', error);
+        }
     };
-
-
-    const handleAddTask = async (listId: string, title: string) => {
-        const task = await createTaskMock(boardId, listId, title);
-        setBoard((prev) => {
-            if (!prev) return prev;
-            return {
-                ...prev,
-                tasks: { ...prev.tasks, [task.id]: task },
-                lists: prev.lists.map((l) => 
-                    l.id === listId 
-                        ? { ...l, taskIds: [...l.taskIds, task.id] } // Add to end of list
-                        : l
-                )
-            };
-        });
-    };
-
 
     const onDragEnd = async (result: DropResult) => {
-        if (!result.destination || !board) return;
+        if (!result.destination) return;
+        
         const { source, destination, draggableId } = result;
         
-        // Don't do anything if dropped in same position
-        if (source.droppableId === destination.droppableId) {
-            console.log("Dropped in same position, no changes made");
+        if (source.droppableId === destination.droppableId && 
+            source.index === destination.index) {
             return;
         }
 
-        // Optimistic UI update
-        setBoard((prev) => {
-            if (!prev) return prev;
-            console.log("Updating from", source, "to", destination);
+        try {
+            // Here you would implement the API call to update task position
+            // await updateTaskPosition({
+            //     taskId: Number(draggableId),
+            //     sourceColumnId: Number(source.droppableId),
+            //     destinationColumnId: Number(destination.droppableId),
+            //     newIndex: destination.index
+            // });
 
-            if (source.droppableId === destination.droppableId) {
-                const list = prev.lists.find((l) => l.id === source.droppableId);
-                if (!list) return prev;
-            }
-            
-            const newLists = prev.lists.map((list) => {
-                if (list.id === source.droppableId) {
-                    const newTaskIds = [...list.taskIds];
+            // For now, we'll just update the local state
+            // This should be replaced with the actual response from the backend
+            const newColumns = columns.map(column => {
+                if (column.id === Number(source.droppableId)) {
+                    const newTaskIds = [...(column.tasksId || [])];
                     newTaskIds.splice(source.index, 1);
-                    return { ...list, taskIds: newTaskIds };
+                    return { ...column, tasksId: newTaskIds };
                 }
-                if (list.id === destination.droppableId) {
-                    const newTaskIds = [...list.taskIds];
-                    newTaskIds.splice(destination.index, 0, draggableId);
-                    return { ...list, taskIds: newTaskIds };
+                if (column.id === Number(destination.droppableId)) {
+                    const newTaskIds = [...(column.tasksId || [])];
+                    newTaskIds.splice(destination.index, 0, Number(draggableId));
+                    return { ...column, tasksId: newTaskIds };
                 }
-                return list;
+                return column;
             });
 
-            return { ...prev, lists: newLists };
-        });
-
-        try {
-            await moveTaskMock(
-                boardId,
-                source.droppableId,
-                destination.droppableId,
-                draggableId,
-                destination.index
-            );
-        } catch (e) {
-            console.error(e);
-            // Revert on error
-            const fresh = await fetchBoardDetailMock(boardId);
-            setBoard(fresh);
+            setColumns(newColumns);
+        } catch (error) {
+            console.error('Error updating task position:', error);
+            // Refresh the columns data from the server in case of error
+            const columnsData = await fetchListColumns(boardId);
+            setColumns(columnsData);
         }
     };
 
-
-    if (loading || !board) return <div className="flex items-center justify-center h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-sky-600"></div>
-    </div>;
+    if (loading || !board) return (
+        <div className="flex items-center justify-center h-screen">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-sky-600"></div>
+        </div>
+    );
 
     return (
         <div className="p-6 min-h-screen bg-gray-100">
@@ -124,13 +116,11 @@ export const BoardView: React.FC<{ boardId?: string }> = () => {
 
             <DragDropContext onDragEnd={onDragEnd}>
                 <div className="flex gap-4 overflow-x-auto pb-6">
-                    {board.lists.map((list) => (
+                    {columns.map((column) => (
                         <ListColumn 
-                            key={list.id} 
-                            list={list} 
-                            tasks={list.taskIds.map((id) => board.tasks[id])} 
-                            onAddTask={(title) => handleAddTask(list.id, title)}
-                            onEditTask={handleEditTask} 
+                            key={column.id} 
+                            list={column}
+                            onEditTask={handleEditTask}
                         />
                     ))}
                     
@@ -141,16 +131,16 @@ export const BoardView: React.FC<{ boardId?: string }> = () => {
                                     type="text"
                                     value={newListName}
                                     onChange={(e) => setNewListName(e.target.value)}
-                                    placeholder="Nombre de la lista"
+                                    placeholder="List name"
                                     className="w-full p-2 border rounded mb-2 focus:outline-none focus:ring-2 focus:ring-sky-500"
                                     autoFocus
                                 />
                                 <div className="flex gap-2">
                                     <button
-                                        onClick={handleAddList}
+                                        onClick={handleAddColumn}
                                         className="px-3 py-1.5 rounded bg-sky-600 text-white hover:bg-sky-700 flex-grow"
                                     >
-                                        Añadir lista
+                                        Añadir
                                     </button>
                                     <button
                                         onClick={() => {
@@ -169,10 +159,10 @@ export const BoardView: React.FC<{ boardId?: string }> = () => {
                                 className="w-full p-3 rounded-lg bg-white/80 hover:bg-white text-gray-600 hover:text-gray-800 shadow text-left transition-colors"
                             >
                                 <span className="flex items-center">
-                                    <svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                                    <svg className="w-5 h-5 mr-2" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} stroke="currentColor" viewBox="0 0 24 24">
+                                        <path d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                                     </svg>
-                                    Añadir nueva lista
+                                    Nueva lista
                                 </span>
                             </button>
                         )}
@@ -181,4 +171,4 @@ export const BoardView: React.FC<{ boardId?: string }> = () => {
             </DragDropContext>
         </div>
     );
-};
+}

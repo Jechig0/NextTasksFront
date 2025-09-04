@@ -3,16 +3,16 @@ import ReactDOM from "react-dom/client";
 import React from 'react';
 import { BrowserRouter, Routes, Route, useNavigate, useParams } from 'react-router-dom';
 import { BoardList } from './components/BoardList';
-import { BoardView } from "./views/Boardview";
+import BoardView from "./views/BoardView";
 import "./index.css";
 
 const Home: React.FC = () => {
-const navigate = useNavigate();
-return <BoardList onOpenBoard={(id) => navigate(`/boards/${id}`)} />;
+  const navigate = useNavigate();
+  return <BoardList onOpenBoard={(id) => navigate(`/boards/${id}`)} />;
 };
 
 const BoardPage: React.FC = () => {
-  const { id } = useParams<{ id: string }>(); // 👈 forzamos tipado
+  const { id } = useParams<{ id: number }>(); // 👈 forzamos tipado
   if (!id) return <div>Board ID no proporcionado</div>;
   return <BoardView boardId={id} />;
 };
