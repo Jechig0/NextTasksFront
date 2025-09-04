@@ -12,22 +12,25 @@ const Home: React.FC = () => {
 };
 
 const BoardPage: React.FC = () => {
-  const { id } = useParams<{ id: number }>(); // 👈 forzamos tipado
+  const { id } = useParams<{ id: string }>(); // 👈 forzamos tipado
   if (!id) return <div>Board ID no proporcionado</div>;
-  return <BoardView boardId={(id)} />;
+  return <BoardView boardId={Number(id)} />;
 };
 
 const App = () => (
-  <BrowserRouter>
+  <>
     <div className="p-6 min-h-screen bg-gray-50">
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/boards/:id" element={<BoardPage />} />
     </Routes>
     </div>
-  </BrowserRouter>
+  </>
 );
+
+// Export the App component for Module Federation
+export default App;
 
 const root = ReactDOM.createRoot(document.getElementById("app") as HTMLElement);
 
-root.render(<App />);
+root.render(<BrowserRouter><App /></BrowserRouter>);

@@ -20,6 +20,8 @@ export const BoardList: React.FC<{ token?: string; onOpenBoard?: (id: number) =>
                 if (b.length > 1) {
                     const sortedBoards = [...b].sort((a, b) => a.id - b.id);
                     setBoards(sortedBoards);
+                } else{
+                    setBoards(b);
                 }
             })
             .catch((e) => setError(String(e)))
