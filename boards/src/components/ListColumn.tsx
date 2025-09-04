@@ -57,7 +57,7 @@ export const ListColumn: React.FC<ListColumnProps> = ({
                 <div className="flex justify-between items-center">
                     <h3 className="font-semibold text-gray-700">{list.name}</h3>
                     <span className="px-2 py-0.5 bg-gray-100 rounded-full text-xs text-gray-600">
-                        {list.tasksId?.length || 0}
+                        {tasks.length || 0}
                     </span>
                 </div>
             </div>
