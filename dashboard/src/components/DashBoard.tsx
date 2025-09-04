@@ -203,9 +203,6 @@ const DashBoard: React.FC = () => {
 
       {/* Botón de actualizar */}
       <div className="flex justify-center gap-3">
-        <button onClick={refetch} className="btn btn-primary">
-          Actualizar datos
-        </button>
       <Link to="/boards" className="btn btn-accent">Ir a los Tableros</Link>
       </div>
     </div>
