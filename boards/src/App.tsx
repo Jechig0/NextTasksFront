@@ -1,7 +1,7 @@
 import ReactDOM from "react-dom/client";
 
 import React from 'react';
-import { BrowserRouter, Routes, Route, useNavigate, useParams } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useNavigate, useParams, Navigate } from 'react-router-dom';
 import { BoardList } from './components/BoardList';
 import BoardView from "./views/BoardView";
 import "./index.css";
@@ -21,9 +21,10 @@ const App = () => (
   <>
     <div className="p-6 min-h-screen bg-gray-50">
     <Routes>
-      <Route path="/" element={<Home />} />
+      <Route path="/boards" element={<Home />} />
       <Route path="/boards/:id" element={<BoardPage />} />
-    </Routes>
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes> 
     </div>
   </>
 );
