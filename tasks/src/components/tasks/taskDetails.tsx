@@ -27,6 +27,10 @@ export const TaskDetails = ({ taskId }: TaskDetailsProps) => {
     await deleteTaskHelper(taskId, setIsDeleting, setShowDeleteModal, navigate);
   };
 
+  const navigateToBoard = (boardId: number) => {
+    navigate(`/boards/${boardId}`);
+  };
+
   const handleRemoveTagFromTask = async (tagId: number) => {
     try {
       await removeTagHelper(taskId, tagId, refetch);
@@ -134,6 +138,12 @@ export const TaskDetails = ({ taskId }: TaskDetailsProps) => {
 
         <div className="border-t border-gray-500 my-4"></div>
         <div className="flex justify-center gap-3">
+          <button
+            className="btn btn-ghost"
+            onClick={() => navigateToBoard(task.column.board.id)}
+          >
+            Volver
+          </button>
           <button
             className="btn btn-primary"
             onClick={() => navigateToEditTask(task.id, navigate)}

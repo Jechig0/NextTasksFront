@@ -6,8 +6,15 @@ export interface Task {
   dueDate: Date;
   priority: number;
   completionDate?: Date;
-  board: Board;
+  column: Column;
   tags: Tag[];
+}
+
+
+export interface Column {
+  id: number;
+  name: string;
+  board: Board;
 }
 
 export interface TaskRequest {
