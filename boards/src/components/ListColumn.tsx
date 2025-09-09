@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Droppable } from "react-beautiful-dnd";
+import { useNavigate } from "react-router-dom";
 import { Column } from "../interfaces/column";
 import { Task } from "../interfaces/task";
 import { TaskCard } from "./TaskCard";
@@ -18,6 +19,11 @@ export const ListColumn: React.FC<ListColumnProps> = ({
     const [newTaskTitle, setNewTaskTitle] = useState("");
     const [tasks, setTasks] = useState<Task[]>([]); // Esto debería venir de un estado global o prop
     const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
+
+    const handleTaskDoubleClick = (taskId: number) => {
+        navigate(`/tasks/details/${taskId}`);
+    };
 
     useEffect(() => {
             const loadListData = async () => {
@@ -79,6 +85,7 @@ export const ListColumn: React.FC<ListColumnProps> = ({
                                 task={task} 
                                 index={index}
                                 onEdit={() => onEditTask?.(task.id)}
+                                onDoubleClick={() => handleTaskDoubleClick(task.id)}
                             />
                         ))}
                         {provided.placeholder}

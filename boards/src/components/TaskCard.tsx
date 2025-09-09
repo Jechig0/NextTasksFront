@@ -7,9 +7,10 @@ interface TaskCardProps {
     task: Task;
     index: number;
     onEdit?: () => void;
+    onDoubleClick?: () => void;
 }
 
-export const TaskCard: React.FC<TaskCardProps> = ({ task, index, onEdit }) => {
+export const TaskCard: React.FC<TaskCardProps> = ({ task, index, onEdit, onDoubleClick }) => {
     if(!task) return null;
     return (
         <Draggable draggableId={task.id.toString()} index={index}>
@@ -18,9 +19,10 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, index, onEdit }) => {
                     ref={provided.innerRef}
                     {...provided.draggableProps}
                     {...provided.dragHandleProps}
-                    className={`p-2 mb-2 bg-white rounded-lg shadow-sm ${
+                    className={`p-2 mb-2 bg-white rounded-lg shadow-sm cursor-pointer ${
                         snapshot.isDragging ? 'shadow-md rotate-3' : ''
                     }`}
+                    onDoubleClick={onDoubleClick}
                 >
                     <div className="flex justify-between items-start gap-2">
                         <div className="flex-1">

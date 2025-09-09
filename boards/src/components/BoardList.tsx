@@ -23,9 +23,6 @@ export const BoardList: React.FC<{ token?: string; onOpenBoard?: (id: number) =>
                 } else{
                     setBoards(b);
                 }
-                else {
-                    setBoards(b);
-                }
             })
             .catch((e) => setError(String(e)))
             .finally(() => setLoading(false));
