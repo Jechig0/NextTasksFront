@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { DragDropContext, DropResult } from "react-beautiful-dnd";
+import {useNavigate} from "react-router-dom";
 import { ListColumn } from "../components/ListColumn";
 import { Column } from "../interfaces/column";
 import { Board } from "../interfaces/board";
@@ -12,6 +13,8 @@ export default function BoardView({ boardId }: { boardId: number }) {
     const [isAddingList, setIsAddingList] = useState(false);
     const [newListName, setNewListName] = useState("");
     const [refreshKey, setRefreshKey] = useState(0);
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         const loadBoardData = async () => {
@@ -96,6 +99,7 @@ export default function BoardView({ boardId }: { boardId: number }) {
                         <div className="text-sm text-gray-600 mt-1">{board.description}</div>
                     }
                 </div>
+                <button className="btn btn-accent" onClick={()=>navigate(`/boards`)}> Vovler </button>
             </div>
 
             <DragDropContext onDragEnd={onDragEnd}>
