@@ -5,7 +5,6 @@ import {
   loadTaskDataForEditing,
   handleTaskSubmit,
   navigateToTaskDetails,
-  navigateBack,
   resetFormErrors,
   getPriorityOptions,
   getSubmitButtonText,
@@ -67,10 +66,7 @@ const EditTask: React.FC<EditTaskProps> = () => {
     }
   };
 
-  const handleCancel = () => {
-    navigateBack(navigate);
-  };
-
+  
   // Loading state
   if (loadingTask) {
     return (
@@ -90,7 +86,7 @@ const EditTask: React.FC<EditTaskProps> = () => {
             <span>{taskError}</span>
           </div>
           <div className="card-actions justify-end">
-            <button onClick={handleCancel} className="btn btn-ghost">
+            <button onClick={() => navigate(-1)} className="btn btn-ghost">
               Volver
             </button>
           </div>
@@ -196,7 +192,7 @@ const EditTask: React.FC<EditTaskProps> = () => {
           <div className="card-actions justify-between pt-4">
             <button
               type="button"
-              onClick={handleCancel}
+              onClick={() => navigateToTaskDetails(task!.id, navigate)} // Si por alguna razon no tiene board, lo mando al 1
               className="btn btn-ghost"
             >
               Cancelar

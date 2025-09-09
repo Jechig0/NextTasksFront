@@ -8,7 +8,7 @@ import {
   resetForm,
   loadTagDataForEditing,
   getSubmitButtonText,
-  getPageTitle
+  getPageTitle,
 } from "./helpers/newTag.helper";
 
 interface NewTagProps {
@@ -17,6 +17,8 @@ interface NewTagProps {
 
 const NewTag: React.FC<NewTagProps> = ({ userId }) => {
   const { id } = useParams<{ id: string }>();
+
+  const { taskId } = useParams<{ taskId: string }>();
   const navigate = useNavigate();
   const isEditing = Boolean(id);
   const tagId = id ? parseInt(id) : null;
@@ -37,7 +39,13 @@ const NewTag: React.FC<NewTagProps> = ({ userId }) => {
   }, [isEditing, tag]);
 
   const handleNavigation = () => {
-    navigate(-1); // Navegar hacia atrás como la flecha del navegador
+    const isStandalone = window.location.port === "8083"; // Puerto específico del micro-frontend tasks
+
+    if (isStandalone) {
+      navigate(`/addTag/${taskId}`);
+    } else {
+      navigate(`/tasks/addTag/${taskId}`);
+    }
   };
 
   const handleCreateNewTag = async () => {
@@ -45,8 +53,14 @@ const NewTag: React.FC<NewTagProps> = ({ userId }) => {
       setIsSubmitting(true);
       setError("");
 
-      await handleCreateOrUpdateTag(isEditing, tagId, newTagName, newTagColor, userId);
-      navigate(-1); // Volver a la página anterior después de crear/editar el tag
+      await handleCreateOrUpdateTag(
+        isEditing,
+        tagId,
+        newTagName,
+        newTagColor,
+        userId
+      );
+      handleNavigation();
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -56,7 +70,7 @@ const NewTag: React.FC<NewTagProps> = ({ userId }) => {
 
   const handleCancel = () => {
     resetForm(setNewTagName, setNewTagColor, setError);
-    navigate(-1); // Volver a la página anterior
+    handleNavigation();
   };
 
   // Mostrar loading mientras se carga el tag para editar
@@ -72,9 +86,7 @@ const NewTag: React.FC<NewTagProps> = ({ userId }) => {
   return (
     <div className="card bg-base-100 shadow-xl max-w-2xl mx-auto">
       <div className="card-body">
-        <h2 className="card-title text-2xl mb-6">
-          {getPageTitle(isEditing)}
-        </h2>
+        <h2 className="card-title text-2xl mb-6">{getPageTitle(isEditing)}</h2>
 
         {(error || fetchError) && (
           <div className="alert alert-error mb-4">

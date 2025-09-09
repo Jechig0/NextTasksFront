@@ -1,5 +1,5 @@
 import { updateTask } from "../../../services/Task.service";
-import { Board, Task, TaskRequest } from "../../../interfaces/task.interface";
+import { Board, Column, Task, TaskRequest } from "../../../interfaces/task.interface";
 
 
 export const loadTaskDataForEditing = (
@@ -44,7 +44,7 @@ export const handleTaskSubmit = async (
         ? new Date(completionDate)
         : undefined,
       priority,
-      board: task?.board ?? {} as Board, // Usar el board actual de la tarea
+      column: task?.column ?? {} as Column, // Usar el column actual de la tarea
     };
 
     await updateTask(taskId, taskData);
@@ -68,9 +68,6 @@ export const navigateToTaskDetails = (
   }
 };
 
-export const navigateBack = (navigate: (delta: number) => void): void => {
-  navigate(-1);
-};
 
 export const resetFormErrors = (setError: (error: string) => void): void => {
   setError("");

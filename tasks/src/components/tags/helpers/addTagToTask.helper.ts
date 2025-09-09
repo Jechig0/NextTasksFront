@@ -17,13 +17,13 @@ export const handleSelectExistingTag = (
   setSelectedTag(tag);
 };
 
-export const handleNavigateNewTag = (navigate: (path: string) => void) => {
+export const handleNavigateNewTag = (taskId:number, navigate: (path: string) => void) => {
   const isStandalone = window.location.port === "8083"; // Puerto específico del micro-frontend tasks
 
   if (isStandalone) {
-    navigate(`/tags/new`);
+    navigate(`/tags/new/${taskId}`);
   } else {
-    navigate(`/tasks/tags/new`);
+    navigate(`/tasks/tags/new/${taskId}`);
   }
 };
 
@@ -44,6 +44,7 @@ export const handleCancel = (
 
 export const handleEdit = (
   selectedTag: Tag | null,
+  taskId :number,
   navigate: (path: string) => void
 ) => {
   if (!selectedTag) return;
@@ -51,9 +52,9 @@ export const handleEdit = (
   const isStandalone = window.location.port === "8083"; // Puerto específico del micro-frontend tasks
 
   if (isStandalone) {
-    navigate(`/tags/edit/${selectedTag.id}`);
+    navigate(`/tags/edit/${selectedTag.id}/${taskId}`);
   } else {
-    navigate(`/tasks/tags/edit/${selectedTag.id}`);
+    navigate(`/tasks/tags/edit/${selectedTag.id}/${taskId}`);
   }
 };
 

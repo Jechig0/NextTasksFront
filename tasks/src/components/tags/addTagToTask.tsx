@@ -37,7 +37,7 @@ const AddTagToTask: React.FC<AddTagToTaskProps> = ({ userId }) => {
 
 
   const handleNavigateNewTag = () => {
-    newTag(navigate);
+    newTag(taskId, navigate);
   };
 
   const handleSelectExistingTag = (tag: Tag) => {
@@ -49,7 +49,7 @@ const AddTagToTask: React.FC<AddTagToTaskProps> = ({ userId }) => {
   };
 
   const handleEdit = () => {
-    editTag(selectedTag, navigate);
+    editTag(selectedTag, taskId, navigate);
   };
 
   const handleDelete = async () => {

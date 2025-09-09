@@ -25,8 +25,8 @@ const TasksApp = () => (
           <Route path="/details/:id" element={<TaskDetailsWrapper />} />
           <Route path="/edit/:id" element={<EditTask />} />
           <Route path="/addTag/:taskId" element={<AddTagToTask userId={1} />} />
-          <Route path="/tags/new" element={<NewTag userId={1} />} />
-          <Route path="/tags/edit/:id" element={<NewTag userId={1} />} />
+          <Route path="/tags/new/:taskId" element={<NewTag userId={1} />} />
+          <Route path="/tags/edit/:id/:taskId" element={<NewTag userId={1} />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </div>
