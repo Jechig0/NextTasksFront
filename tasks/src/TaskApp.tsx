@@ -22,12 +22,12 @@ const TasksApp = () => (
     <div className="relative z-10 min-h-screen flex items-center justify-center">
       <div className="bg-white/80 backdrop-blur-md rounded-2xl shadow-xl p-8 max-w-md w-full mx-4 text-center">
         <Routes>
-          <Route path="/tasks/details/:id" element={<TaskDetailsWrapper />} />
-          <Route path="/tasks/edit/:id" element={<EditTask />} />
-          <Route path="/tasks/addTag/:taskId" element={<AddTagToTask userId={1} />} />
-          <Route path="/tasks/tags/new" element={<NewTag userId={1} />} />
-          <Route path="/tasks/tags/edit/:id" element={<NewTag userId={1} />} />
-          <Route path="/tasks/*" element={<Navigate to="/tasks/details/4" />} />
+          <Route path="/details/:id" element={<TaskDetailsWrapper />} />
+          <Route path="/edit/:id" element={<EditTask />} />
+          <Route path="/addTag/:taskId" element={<AddTagToTask userId={1} />} />
+          <Route path="/tags/new" element={<NewTag userId={1} />} />
+          <Route path="/tags/edit/:id" element={<NewTag userId={1} />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </div>
     </div>
@@ -36,12 +36,10 @@ const TasksApp = () => (
 
 export default TasksApp;
 
-// Para desarrollo standalone
-if (document.getElementById("app")) {
+
   const root = ReactDOM.createRoot(document.getElementById("app") as HTMLElement);
   root.render(
-    <BrowserRouter>
+    <BrowserRouter basename="/tasks">
       <TasksApp />
     </BrowserRouter>
   );
-}

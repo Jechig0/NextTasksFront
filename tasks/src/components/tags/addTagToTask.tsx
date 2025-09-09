@@ -5,6 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useFetchTask } from "../../hooks/useFetchTask";
 import { 
   handleSelectExistingTag as selectTag,
+  handleNavigateNewTag as newTag,
   handleCancel as cancelSelection,
   handleEdit as editTag,
   handleDelete as deleteSelectedTag,
@@ -33,6 +34,11 @@ const AddTagToTask: React.FC<AddTagToTaskProps> = ({ userId }) => {
   const filteredTags = filterAvailableTags(existingTags, task?.tags);
 
   const [selectedTag, setSelectedTag] = useState<Tag | null>(null);
+
+
+  const handleNavigateNewTag = () => {
+    newTag(navigate);
+  };
 
   const handleSelectExistingTag = (tag: Tag) => {
     selectTag(tag, selectedTag, setSelectedTag);
@@ -132,7 +138,7 @@ const AddTagToTask: React.FC<AddTagToTaskProps> = ({ userId }) => {
 
         {!selectedTag && (
           <button
-            onClick={() => navigate("/tags/new")}
+            onClick={handleNavigateNewTag}
             className="btn btn-accent"
           >
             Crear Tag
@@ -146,7 +152,7 @@ const AddTagToTask: React.FC<AddTagToTaskProps> = ({ userId }) => {
           </button>
           {selectedTag && (
             <button
-              onClick={() => handleAddTagToTask()}
+              onClick={handleAddTagToTask}
               className="btn btn-primary"
             >
               Añadir Tag a la Tarea

@@ -1,5 +1,5 @@
 import { ErrorResponse } from "../interfaces/errorResponse.interface";
-import { Task, TaskRequest } from "../interfaces/task.interface";
+import { Task } from "../interfaces/task.interface";
 
 const baseUrl = 'http://localhost:8080';
 
@@ -21,7 +21,7 @@ export const getTaskById = async (taskId: number): Promise<Task> => {
     return data;
 };
 
-export const createTask = async (taskData: TaskRequest): Promise<Task> => {
+export const createTask = async (taskData: Partial<Task>): Promise<Task> => {
     const response = await fetch(`${baseUrl}/tasks`, {
         method: 'POST',
         headers: {
@@ -47,7 +47,7 @@ export const createTask = async (taskData: TaskRequest): Promise<Task> => {
     return data;
 };
 
-export const updateTask = async (taskId: number, taskData: TaskRequest): Promise<Task> => {
+export const updateTask = async (taskId: number, taskData: Partial<Task>): Promise<Task> => {
     const response = await fetch(`${baseUrl}/tasks/${taskId}`, {
         method: 'PUT',
         headers: {

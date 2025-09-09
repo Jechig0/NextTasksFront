@@ -1,12 +1,21 @@
 import ReactDOM from "react-dom/client";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Tasks from "tasks/tasks";
+import Boards from "boards/boards";
+import DashBoard from "dashboard/dashboard";
+import LandingPage from "./components/LandingPage";
 
 import "./index.css";
 
 const App = () => (
-  <div className="mt-10 text-3xl mx-auto max-w-6xl">
-    <div>Name: host</div>
-    <div>Framework: react-19</div>
-  </div>
+  <BrowserRouter>
+    <Routes>
+      <Route path="/" element={<LandingPage />} />
+      <Route path="/dashboard" element={<DashBoard />} />
+      <Route path="/tasks/*" element={<Tasks />} />
+      <Route path="*" element={<Boards />} />
+    </Routes>
+  </BrowserRouter>
 );
 
 const root = ReactDOM.createRoot(document.getElementById("app") as HTMLElement);

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useFetchTask } from "../../hooks/useFetchTask";
 import {
-  validateTaskForm,
   loadTaskDataForEditing,
   handleTaskSubmit,
   navigateToTaskDetails,
@@ -10,8 +9,8 @@ import {
   resetFormErrors,
   getPriorityOptions,
   getSubmitButtonText,
-  getCurrentDateMin
 } from "./helpers/editTask.helper";
+import { Task } from "../../interfaces/task.interface";
 
 interface EditTaskProps {}
 
@@ -34,7 +33,14 @@ const EditTask: React.FC<EditTaskProps> = () => {
 
   // Efecto para cargar los datos de la tarea al componente
   useEffect(() => {
-    loadTaskDataForEditing(task, setTitle, setDescription, setDueDate, setCompletionDate, setPriority);
+    loadTaskDataForEditing(
+      task,
+      setTitle,
+      setDescription,
+      setDueDate,
+      setCompletionDate,
+      setPriority
+    );
   }, [task]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -44,7 +50,15 @@ const EditTask: React.FC<EditTaskProps> = () => {
       setIsSubmitting(true);
       resetFormErrors(setError);
 
-      await handleTaskSubmit(taskId, title, description, dueDate, completionDate, priority, task);
+      await handleTaskSubmit(
+        taskId,
+        title,
+        description,
+        dueDate,
+        completionDate,
+        priority,
+        task ?? ({} as Partial<Task>)
+      ); // nunca llegaria al ?? porque sino tengo error y no muestro la interfaz
       navigateToTaskDetails(taskId, navigate);
     } catch (err: any) {
       setError(err.message);
@@ -142,7 +156,6 @@ const EditTask: React.FC<EditTaskProps> = () => {
                 onChange={(e) => setDueDate(e.target.value)}
                 className="input input-bordered w-full"
                 required
-                min={getCurrentDateMin()} // No permitir fechas pasadas
               />
             </div>
 
@@ -157,7 +170,6 @@ const EditTask: React.FC<EditTaskProps> = () => {
                 value={completionDate}
                 onChange={(e) => setCompletionDate(e.target.value)}
                 className="input input-bordered w-full"
-                min={getCurrentDateMin()} // No permitir fechas pasadas
               />
             </div>
 

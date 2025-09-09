@@ -22,7 +22,7 @@ export default defineConfig({
   },
 
   devServer: {
-    port: 8080,
+    port: 8085,
     historyApiFallback: true,
     watchFiles: [path.resolve(__dirname, "src")],
   },
@@ -30,7 +30,7 @@ export default defineConfig({
     // You need to set a unique value that is not equal to other applications
     uniqueName: "host",
     // publicPath must be configured if using manifest
-    publicPath: "http://localhost:8080/",
+    publicPath: "http://localhost:8085/",
   },
 
   experiments: {
