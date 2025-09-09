@@ -17,9 +17,9 @@ export async function fetchBoards(id?:number, token?: string): Promise<Board[]> 
 }
 
 export async function fetchBoard (boardId: number): Promise<Board> {
-    const response = await fetch(`${API_BASE}/boards/${boardId}`);
-    if (!response.ok) throw new Error('Failed to fetch board');
-    return response.json();
+    const res = await fetch(`${API_BASE}/boards/${boardId}`);
+    if (!res.ok) throw new Error('Failed to fetch board');
+    return res.json();
 };
 
 
@@ -97,4 +97,15 @@ export async function updateTaskPosition(taskId:number, columnId:number, token?:
         },
     });
     if (!res.ok) throw new Error('Error updating task position');
+}
+
+export async function deleteBoard(boardId: number, token?: string): Promise<void> {
+    const res = await fetch(`${API_BASE}/boards/inactive/${boardId}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            ...(token ? { Authorization: `Bearer ${token}` } : {})
+        },
+    });
+    if (!res.ok) throw new Error('Error deleting board');
 }

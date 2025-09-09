@@ -23,6 +23,9 @@ export const BoardList: React.FC<{ token?: string; onOpenBoard?: (id: number) =>
                 } else{
                     setBoards(b);
                 }
+                else {
+                    setBoards(b);
+                }
             })
             .catch((e) => setError(String(e)))
             .finally(() => setLoading(false));
@@ -46,6 +49,10 @@ export const BoardList: React.FC<{ token?: string; onOpenBoard?: (id: number) =>
         }
     };
 
+    const handleDelete = (deletedId: number) => {
+        setBoards(prevBoards => prevBoards.filter(board => board.id !== deletedId));
+    };
+
 
   if (loading) return (
     <div className="flex items-center justify-center h-64">
@@ -62,7 +69,7 @@ export const BoardList: React.FC<{ token?: string; onOpenBoard?: (id: number) =>
                 <h2 className="text-2xl font-bold text-gray-800">Mis tableros</h2>
                 <button 
                     onClick={() => setIsCreating(true)} 
-                    className="px-3 py-1 rounded bg-green-600 text-white"
+                    className="px-3 py-1 rounded bg-green-600 hover:bg-green-900 text-white"
                 >
                     Nuevo tablero
                 </button>
@@ -117,7 +124,12 @@ export const BoardList: React.FC<{ token?: string; onOpenBoard?: (id: number) =>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {boards.map((b) => (
-                    <BoardCard key={b.id} board={b} onOpen={onOpenBoard} />
+                <BoardCard 
+                key={b.id} 
+                board={b} 
+                onOpen={onOpenBoard}
+                onDelete={handleDelete}
+                />
                 ))}
             </div>
         </div>
