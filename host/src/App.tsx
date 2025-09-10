@@ -5,19 +5,59 @@ import Auth from "auth/auth";
 import Boards from "boards/boards";
 import DashBoard from "dashboard/dashboard";
 import LandingPage from "./components/LandingPage";
+import AuthGuard from "./Guards/AuthGuard";
+import GuestGuard from "./Guards/GuestGuard";
+import { AuthProvider } from "./context/AuthContext";
 
 import "./index.css";
 
 const App = () => (
-  <BrowserRouter>
-    <Routes>
-      <Route path="/" element={<LandingPage />} />
-      <Route path="/dashboard" element={<DashBoard />} />
-      <Route path="/tasks/*" element={<Tasks />} />
-      <Route path="/auth/*" element={<Auth />} />
-      <Route path="*" element={<Boards />} />
-    </Routes>
-  </BrowserRouter>
+  <AuthProvider>
+    <BrowserRouter>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <GuestGuard>
+              <LandingPage />
+            </GuestGuard>
+          }
+        />
+        <Route
+          path="/dashboard"
+          element={
+            <AuthGuard>
+              <DashBoard />
+            </AuthGuard>
+          }
+        />
+        <Route
+          path="/tasks/*"
+          element={
+            <AuthGuard>
+              <Tasks />
+            </AuthGuard>
+          }
+        />
+        <Route
+          path="/auth/*"
+          element={
+            <GuestGuard>
+              <Auth />
+            </GuestGuard>
+          }
+        />
+        <Route
+          path="*"
+          element={
+            <AuthGuard>
+              <Boards />
+            </AuthGuard>
+          }
+        />
+      </Routes>
+    </BrowserRouter>
+  </AuthProvider>
 );
 
 const root = ReactDOM.createRoot(document.getElementById("app") as HTMLElement);

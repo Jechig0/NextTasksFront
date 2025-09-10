@@ -3,6 +3,10 @@ import { ErrorResponse } from "../interfaces/errorResponse.interface";
 
 const baseUrl = 'http://localhost:8080';
 
+export interface CheckStatusRequest {
+    token: string;
+}
+
 export const login = async (username: string, password: string): Promise<AuthResponse> => {
     const response = await fetch(`${baseUrl}/auth/login`, {
         method: 'POST',

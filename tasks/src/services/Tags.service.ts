@@ -4,7 +4,7 @@ import { Tag } from "../interfaces/tag.interface";
 const baseUrl = "http://localhost:8080";
 
 export const getTagById = async (tagId: number): Promise<Tag> => {
-  const token = localStorage.getItem("token") || undefined;
+  const token = localStorage.getItem("authToken") || undefined;
   const response = await fetch(`${baseUrl}/tags/${tagId}`, {
     headers: {
       "Content-Type": "application/json",
@@ -28,7 +28,7 @@ export const getTagById = async (tagId: number): Promise<Tag> => {
 };
 
 export const getAllTagsByOwner = async (userId: number): Promise<Tag[]> => {
-  const token = localStorage.getItem("token") || undefined;
+  const token = localStorage.getItem("authToken") || undefined;
   const response = await fetch(`${baseUrl}/tags/owner/${userId}`, {
     headers: {
       "Content-Type": "application/json",
@@ -52,7 +52,7 @@ export const getAllTagsByOwner = async (userId: number): Promise<Tag[]> => {
 };
 
 export const createTag = async (tagData: Partial<Tag>): Promise<Tag> => {
-  const token = localStorage.getItem("token") || undefined;
+  const token = localStorage.getItem("authToken") || undefined;
   const response = await fetch(`${baseUrl}/tags`, {
     method: "POST",
     headers: {
@@ -83,7 +83,7 @@ export const updateTag = async (
   tagId: number,
   tagData: Partial<Tag>
 ): Promise<Tag> => {
-  const token = localStorage.getItem("token") || undefined;
+  const token = localStorage.getItem("authToken") || undefined;
   const response = await fetch(`${baseUrl}/tags/${tagId}`, {
     method: "PUT",
     headers: {
@@ -111,7 +111,7 @@ export const updateTag = async (
 };
 
 export const deleteTag = async (tagId: number): Promise<void> => {
-  const token = localStorage.getItem("token") || undefined;
+  const token = localStorage.getItem("authToken") || undefined;
   const response = await fetch(`${baseUrl}/tags/${tagId}`, {
     method: "DELETE",
     headers: {

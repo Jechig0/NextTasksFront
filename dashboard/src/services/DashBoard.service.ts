@@ -4,7 +4,7 @@ import { ErrorResponse } from "../interfaces/errorResponse.interface";
 const baseURL = "http://localhost:8080";
 
 export const getDashBoardData = async (): Promise<DashBoard> => {
-  const token = localStorage.getItem("token") || undefined;
+  const token = localStorage.getItem("authToken") || undefined;
 
   console.log("Using token:", token); // Verifica que el token se esté obteniendo correctamente
 

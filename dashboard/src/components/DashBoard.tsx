@@ -1,9 +1,11 @@
 import React from "react";
 import { useFetchDashBoard } from "../hooks/useFetchDashBoard";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const DashBoard: React.FC = () => {
   const { dashboard, loading, error, refetch } = useFetchDashBoard();
+
+  const navigate = useNavigate();
 
   if (loading) {
     return (
@@ -72,22 +74,63 @@ const DashBoard: React.FC = () => {
         <p className="text-base-content/70">
           Resumen de tu actividad y estadísticas
         </p>
+
+        <button
+          className="btn btn-error"
+          onClick={() => {
+            localStorage.removeItem("authToken");
+            window.location.reload();
+          }}
+        >
+          Cerrar Sesión
+        </button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
         {/* Total de Tableros */}
         <div className="stat bg-primary text-primary-content rounded-box">
           <div className="stat-figure text-primary-content">
-            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24">
-	<g fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-		<path stroke-dasharray="64" stroke-dashoffset="64" d="M12 7h8c0.55 0 1 0.45 1 1v10c0 0.55 -0.45 1 -1 1h-16c-0.55 0 -1 -0.45 -1 -1v-11Z">
-			<animate fill="freeze" attributeName="stroke-dashoffset" dur="0.6s" values="64;0" />
-		</path>
-		<path d="M12 7h-9v0c0 0 0.45 0 1 0h6z" opacity="0">
-			<animate fill="freeze" attributeName="d" begin="0.6s" dur="0.2s" values="M12 7h-9v0c0 0 0.45 0 1 0h6z;M12 7h-9v-1c0 -0.55 0.45 -1 1 -1h6z" />
-			<set fill="freeze" attributeName="opacity" begin="0.6s" to="1" />
-		</path>
-	</g>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="40"
+              height="40"
+              viewBox="0 0 24 24"
+            >
+              <g
+                fill="none"
+                stroke="#000"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+              >
+                <path
+                  stroke-dasharray="64"
+                  stroke-dashoffset="64"
+                  d="M12 7h8c0.55 0 1 0.45 1 1v10c0 0.55 -0.45 1 -1 1h-16c-0.55 0 -1 -0.45 -1 -1v-11Z"
+                >
+                  <animate
+                    fill="freeze"
+                    attributeName="stroke-dashoffset"
+                    dur="0.6s"
+                    values="64;0"
+                  />
+                </path>
+                <path d="M12 7h-9v0c0 0 0.45 0 1 0h6z" opacity="0">
+                  <animate
+                    fill="freeze"
+                    attributeName="d"
+                    begin="0.6s"
+                    dur="0.2s"
+                    values="M12 7h-9v0c0 0 0.45 0 1 0h6z;M12 7h-9v-1c0 -0.55 0.45 -1 1 -1h6z"
+                  />
+                  <set
+                    fill="freeze"
+                    attributeName="opacity"
+                    begin="0.6s"
+                    to="1"
+                  />
+                </path>
+              </g>
             </svg>
           </div>
           <div className="stat-title text-primary-content/80">
@@ -99,8 +142,16 @@ const DashBoard: React.FC = () => {
         {/* Total de Tareas */}
         <div className="stat bg-secondary text-secondary-content rounded-box">
           <div className="stat-figure text-secondary-content">
-            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24">
-	<path fill="#000" d="M10.944 15.433L9.16 13.648q-.073-.073-.161-.11t-.18-.036t-.192.036t-.174.11q-.165.165-.165.357t.165.356l1.933 1.939q.13.13.267.184q.137.052.298.052t.298-.052t.268-.184l4.032-4.033q.146-.146.156-.35t-.156-.369t-.36-.165t-.36.165zM6.616 21q-.691 0-1.153-.462T5 19.385V4.615q0-.69.463-1.152T6.616 3h7.213q.323 0 .628.13t.522.349L18.52 7.02q.217.218.348.522t.131.628v11.214q0 .69-.463 1.153T17.385 21zM14 7.192V4H6.616q-.231 0-.424.192T6 4.615v14.77q0 .23.192.423t.423.192h10.77q.23 0 .423-.192t.192-.424V8h-3.192q-.349 0-.578-.23T14 7.192M6 4v4zv16z" />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="40"
+              height="40"
+              viewBox="0 0 24 24"
+            >
+              <path
+                fill="#000"
+                d="M10.944 15.433L9.16 13.648q-.073-.073-.161-.11t-.18-.036t-.192.036t-.174.11q-.165.165-.165.357t.165.356l1.933 1.939q.13.13.267.184q.137.052.298.052t.298-.052t.268-.184l4.032-4.033q.146-.146.156-.35t-.156-.369t-.36-.165t-.36.165zM6.616 21q-.691 0-1.153-.462T5 19.385V4.615q0-.69.463-1.152T6.616 3h7.213q.323 0 .628.13t.522.349L18.52 7.02q.217.218.348.522t.131.628v11.214q0 .69-.463 1.153T17.385 21zM14 7.192V4H6.616q-.231 0-.424.192T6 4.615v14.77q0 .23.192.423t.423.192h10.77q.23 0 .423-.192t.192-.424V8h-3.192q-.349 0-.578-.23T14 7.192M6 4v4zv16z"
+              />
             </svg>
           </div>
           <div className="stat-title text-secondary-content/80">
@@ -203,10 +254,12 @@ const DashBoard: React.FC = () => {
 
       {/* Botón de actualizar */}
       <div className="flex justify-center gap-3">
-      <Link to="/boards" className="btn btn-accent">Ir a los Tableros</Link>
+        <Link to="/boards" className="btn btn-accent">
+          Ir a los Tableros
+        </Link>
       </div>
     </div>
   );
-};  
+};
 
 export default DashBoard;

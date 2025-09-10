@@ -32,14 +32,14 @@ export const handleDeleteTask = async (
 ): Promise<void> => {
   setIsDeleting(true);
   try {
-    await deleteTask(task.id);
+    await deleteTask(task?.id ?? 0);
     setShowDeleteModal(false);
 
     // Mostrar mensaje de éxito
     alert("Tarea eliminada exitosamente");
 
     // Redirigir a la página principal o lista de tareas
-    navigate("/boards/" + task.column.board.id);
+    navigate("/boards/" + task?.column.board.id);
   } catch (error) {
     console.error("Error al eliminar la tarea:", error);
     alert(

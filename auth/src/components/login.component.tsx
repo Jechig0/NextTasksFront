@@ -20,8 +20,8 @@ const Login = () => {
     login(formData.username, formData.password)
       .then((response) => {
         console.log("Login successful:", response);
-        localStorage.setItem("token", response.token);
-        navigate("/dashboard");
+        localStorage.setItem("authToken", response.token);
+        window.location.reload();
       })
       .catch((error) => {
         console.error("Login failed:", error);
