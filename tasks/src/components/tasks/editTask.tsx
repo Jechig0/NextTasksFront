@@ -49,6 +49,7 @@ const EditTask: React.FC<EditTaskProps> = () => {
       setIsSubmitting(true);
       resetFormErrors(setError);
 
+      
       await handleTaskSubmit(
         taskId,
         title,
@@ -130,7 +131,7 @@ const EditTask: React.FC<EditTaskProps> = () => {
               <span className="label-text font-medium">Descripción</span>
             </label>
             <textarea
-              value={description}
+              value={description || ""}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Descripción de la tarea (opcional)"
               className="textarea textarea-bordered w-full h-24 resize-none"
@@ -175,7 +176,7 @@ const EditTask: React.FC<EditTaskProps> = () => {
                 <span className="label-text font-medium">Prioridad</span>
               </label>
               <select
-                value={priority}
+                value={priority || 0}
                 onChange={(e) => setPriority(parseInt(e.target.value))}
                 className="select select-bordered w-full"
               >

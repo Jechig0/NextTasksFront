@@ -36,16 +36,28 @@ export const handleTaskSubmit = async (
  
 
   try {
+
+    console.log({
+            title,
+            description,
+            dueDate,
+            completionDate,
+            priority,
+          });
+    
+
     const taskData: Partial<Task> = {
       title: title.trim(),
-      description: description.trim(),
+      description: description?.trim() || "",
       dueDate: new Date(dueDate),
       completionDate: completionDate
         ? new Date(completionDate)
         : undefined,
-      priority,
+      priority: priority || undefined,
       column: task?.column ?? {} as Column, // Usar el column actual de la tarea
     };
+
+    console.log(taskData);
 
     await updateTask(taskId, taskData);
   } catch (err: any) {

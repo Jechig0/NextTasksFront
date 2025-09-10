@@ -20,7 +20,7 @@ const Login = () => {
     login(formData.username, formData.password)
       .then((response) => {
         console.log("Login successful:", response);
-        sessionStorage.setItem("token", response.token);
+        localStorage.setItem("token", response.token);
         navigate("/dashboard");
       })
       .catch((error) => {

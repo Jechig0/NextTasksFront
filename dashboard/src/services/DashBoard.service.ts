@@ -1,37 +1,37 @@
 import { DashBoard } from "../interfaces/dashboard.interface";
 import { ErrorResponse } from "../interfaces/errorResponse.interface";
 
-const baseURL = 'http://localhost:8080';
+const baseURL = "http://localhost:8080";
 
 export const getDashBoardData = async (): Promise<DashBoard> => {
-    // Simular un delay de red
-    // await new Promise(resolve => setTimeout(resolve, 1000));
+  const token = localStorage.getItem("token") || undefined;
 
-    // // Mock data para el dashboard
-    // const mockDashboard: DashBoard = {
-    //     totalBoards: 5,
-    //     totalTasks: 24,
-    //     completedTasks: 18,
-    //     pendingTasks: 4,
-    //     overdueTasks: 2,
-    //     productivityRate: 75 // (18/24) * 100
-    // };
+  console.log("Using token:", token); // Verifica que el token se esté obteniendo correctamente
 
-    // return mockDashboard;
+  const algo = {...(token ? { Authorization: `Bearer ${token}` } : {})};
+  console.log(algo);
 
-    
-    const response = await fetch(`${baseURL}/dashboard`);
-    if (!response.ok) {
-        try {
-            // Intentar obtener el mensaje de error del backend
-            const errorData: ErrorResponse = await response.json();
-            console.log("Error fetching task:", errorData.message);
-            throw new Error(errorData.message);
-        } catch (parseError) {
-            // Si no se puede parsear la respuesta, usar el statusText
-            console.log("Error fetching task:", response.statusText);
-            throw new Error("Failed to fetch task");
-        }
+
+  const response = await fetch(`${baseURL}/dashboard`, {
+    headers: {
+      "Content-Type": "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+  });
+
+  
+
+  if (!response.ok) {
+    try {
+      // Intentar obtener el mensaje de error del backend
+      const errorData: ErrorResponse = await response.json();
+      console.log("Error fetching dashboard:", errorData.message);
+      throw new Error(errorData.message);
+    } catch (parseError) {
+      // Si no se puede parsear la respuesta, usar el statusText
+      console.log("Error fetching dashboard:", response.statusText);
+      throw new Error("Failed to fetch dashboard");
     }
-    return response.json() as Promise<DashBoard>;
-}
+  }
+  return response.json() as Promise<DashBoard>;
+};

@@ -23,7 +23,7 @@ const Register = () => {
     register( formData.username, formData.email, formData.password, formData.fullName)
       .then((response) => {
         console.log("Registration successful:", response);
-        sessionStorage.setItem("token", response.token);
+        localStorage.setItem("token", response.token);
         navigate("/dashboard");
       })
       .catch((error) => {

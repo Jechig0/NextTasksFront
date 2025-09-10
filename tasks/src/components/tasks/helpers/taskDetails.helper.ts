@@ -1,3 +1,4 @@
+import { Task } from "../../../interfaces/task.interface";
 import { deleteTask, removeTagFromTask } from "../../../services/Task.service";
 
 export const formatDate = (date: Date): string => {
@@ -24,21 +25,21 @@ export const getPriorityText = (priority: number): string => {
 };
 
 export const handleDeleteTask = async (
-  taskId: number,
+  task: Task | null,
   setIsDeleting: (loading: boolean) => void,
   setShowDeleteModal: (show: boolean) => void,
   navigate: (path: string) => void
 ): Promise<void> => {
   setIsDeleting(true);
   try {
-    await deleteTask(taskId);
+    await deleteTask(task.id);
     setShowDeleteModal(false);
 
     // Mostrar mensaje de éxito
     alert("Tarea eliminada exitosamente");
 
     // Redirigir a la página principal o lista de tareas
-    navigate("/");
+    navigate("/boards/" + task.column.board.id);
   } catch (error) {
     console.error("Error al eliminar la tarea:", error);
     alert(

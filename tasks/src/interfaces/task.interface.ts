@@ -1,10 +1,10 @@
 export interface Task {
   id: number;
   title: string;
-  description: string;
+  description?: string;
   creationDate: Date;
   dueDate: Date;
-  priority: number;
+  priority?: number;
   completionDate?: Date;
   column: Column;
   tags: Tag[];

@@ -24,7 +24,7 @@ export const TaskDetails = ({ taskId }: TaskDetailsProps) => {
   const navigate = useNavigate();
 
   const handleDeleteTask = async () => {
-    await deleteTaskHelper(taskId, setIsDeleting, setShowDeleteModal, navigate);
+    await deleteTaskHelper(task, setIsDeleting, setShowDeleteModal, navigate);
   };
 
   const navigateToBoard = (boardId: number) => {
@@ -32,11 +32,7 @@ export const TaskDetails = ({ taskId }: TaskDetailsProps) => {
   };
 
   const handleRemoveTagFromTask = async (tagId: number) => {
-    try {
-      await removeTagHelper(taskId, tagId, refetch);
-    } catch (error) {
-      // Error handling is already done in the helper
-    }
+    await removeTagHelper(taskId, tagId, refetch);
   };
 
   if (loading) {
@@ -98,7 +94,7 @@ export const TaskDetails = ({ taskId }: TaskDetailsProps) => {
         <div>
           <h4 className="font-semibold text-gray-800 mb-2">Prioridad</h4>
           <div className="inline-block px-3 py-1 bg-blue-500 text-white rounded-full text-sm font-medium">
-            {getPriorityText(task.priority)}
+            {getPriorityText(task.priority || 1)}
           </div>
         </div>
 
