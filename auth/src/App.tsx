@@ -2,7 +2,6 @@ import ReactDOM from "react-dom/client";
 
 import "./index.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Home from "./components/home.component";
 import Login from "./components/login.component";
 import Register from "./components/register.component";
 
@@ -14,6 +13,8 @@ const App = () => (
     </Routes>
   </div>
 );
+
+export default App;
 
 const root = ReactDOM.createRoot(document.getElementById("app") as HTMLElement);
 
