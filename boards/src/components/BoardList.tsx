@@ -3,6 +3,7 @@ import { Board } from '../interfaces/board';
 import { fetchBoards, createBoard } from '../services/boardsService';
 //import { fetchBoardsMock as fetchBoards, createBoardMock as createBoard } from "../services/mocks/boardsService.mock";
 import { BoardCard } from './BoardCard';
+import { useNavigate } from 'react-router-dom';
 
 
 export const BoardList: React.FC<{ token?: string; onOpenBoard?: (id: number) => void }> = ({ token, onOpenBoard }) => {
@@ -11,6 +12,8 @@ export const BoardList: React.FC<{ token?: string; onOpenBoard?: (id: number) =>
     const [error, setError] = useState<string | null>(null);
     const [isCreating, setIsCreating] = useState(false);
     const [newBoard, setNewBoard] = useState({ name: '', description: '' });
+
+    const navigate = useNavigate();
 
  useEffect(() => {
         setLoading(true);
@@ -63,13 +66,16 @@ export const BoardList: React.FC<{ token?: string; onOpenBoard?: (id: number) =>
   return (
         <div className="p-6">
             <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold text-gray-800">Mis tableros</h2>
-                <button 
-                    onClick={() => setIsCreating(true)} 
-                    className="px-3 py-1 rounded bg-green-600 hover:bg-green-900 text-white"
-                >
-                    Nuevo tablero
-                </button>
+                <div className="flex items-center gap-4">
+                    <h2 className="text-2xl font-bold text-gray-800">Mis tableros</h2>
+                    <button 
+                        onClick={() => setIsCreating(true)} 
+                        className="px-3 py-1 rounded bg-green-600 hover:bg-green-900 text-white"
+                    >
+                        Nuevo tablero
+                    </button>
+                </div>
+                <button className="btn btn-accent" onClick={()=>navigate(`/dashboard`)}> Volver </button>
             </div>
 
             {isCreating && (

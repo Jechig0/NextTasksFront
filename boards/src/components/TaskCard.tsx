@@ -11,6 +11,19 @@ interface TaskCardProps {
 }
 
 export const TaskCard: React.FC<TaskCardProps> = ({ task, index, onEdit, onDoubleClick }) => {
+
+    const terminado : ()=>Boolean = () => {
+        console.log(task.completionDate != undefined);
+        return task.completionDate != undefined;
+    }
+
+    const vencido : ()=>Boolean = () => {
+        if(!task.dueDate) return false;
+        const due = new Date(task.dueDate);
+        const now = new Date();
+        return due < now && !terminado();
+    }
+
     if(!task) return null;
     return (
         <Draggable draggableId={task.id.toString()} index={index}>
@@ -21,10 +34,10 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, index, onEdit, onDoubl
                     {...provided.dragHandleProps}
                     className={`p-2 mb-2 bg-white rounded-lg shadow-sm cursor-pointer ${
                         snapshot.isDragging ? 'shadow-md rotate-3' : ''
-                    }`}
+                    } ${terminado()?  'border-2 border-green-500' : ''} ${vencido()?  'border-2 border-orange-500' : ''}`}
                     onDoubleClick={onDoubleClick}
                 >
-                    <div className="flex justify-between items-start gap-2">
+                    <div className="flex justify-between items-start gap-2  ">
                         <div className="flex-1">
                             <p className="text-sm text-gray-700">{task.title}</p>
                         </div>

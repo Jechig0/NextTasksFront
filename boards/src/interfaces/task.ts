@@ -3,4 +3,6 @@ export interface Task {
     title: string;
     description?: string;
     columnId: number;
+    completionDate?: Date;
+    dueDate?: Date;
 }

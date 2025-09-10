@@ -99,7 +99,7 @@ export default function BoardView({ boardId }: { boardId: number }) {
                         <div className="text-sm text-gray-600 mt-1">{board.description}</div>
                     }
                 </div>
-                <button className="btn btn-accent" onClick={()=>navigate(`/boards`)}> Vovler </button>
+                <button className="btn btn-accent" onClick={()=>navigate(`/boards`)}> Volver </button>
             </div>
 
             <DragDropContext onDragEnd={onDragEnd}>

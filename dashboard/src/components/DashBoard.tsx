@@ -69,12 +69,14 @@ const DashBoard: React.FC = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <div className="mb-8">
-        <h1 className="text-4xl font-bold mb-2">Dashboard</h1>
-        <p className="text-base-content/70">
-          Resumen de tu actividad y estadísticas
-        </p>
-
+      <div className="mb-8 flex justify-between items-start">
+        <div>
+          <h1 className="text-4xl font-bold mb-2">Dashboard</h1>
+          <p className="text-base-content/70">
+            Resumen de tu actividad y estadísticas
+          </p>
+        </div>
+        
         <button
           className="btn btn-error"
           onClick={() => {
