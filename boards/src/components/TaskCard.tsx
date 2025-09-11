@@ -13,7 +13,6 @@ interface TaskCardProps {
 export const TaskCard: React.FC<TaskCardProps> = ({ task, index, onEdit, onDoubleClick }) => {
 
     const terminado : ()=>Boolean = () => {
-        console.log(task.completionDate != undefined);
         return task.completionDate != undefined;
     }
 
