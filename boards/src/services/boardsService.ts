@@ -4,10 +4,10 @@ import { Task } from "../interfaces/task";
 
 const API_BASE = "http://localhost:8080";
 
-export async function fetchBoards(id?: number): Promise<Board[]> {
+export async function fetchBoards(id: number): Promise<Board[]> {
+  console.log("dentro" +id)
   const token = sessionStorage.getItem("authToken") || undefined;
-  const userId = id ? id : 1;
-  const res = await fetch(`${API_BASE}/boards/owner/${userId}`, {
+  const res = await fetch(`${API_BASE}/boards/owner/${id}`, {
     headers: {
       "Content-Type": "application/json",
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
@@ -34,10 +34,9 @@ export async function createBoard(payload: {
   colorCode?: string;
   description: string;
   name: string;
-  owner?: { id: number };
+  owner: { id: number };
 }): Promise<Board> {
   payload.colorCode = payload.colorCode ? payload.colorCode : "#FFFFFF";
-  payload.owner = payload.owner ? payload.owner : { id: 1 };
   const token = sessionStorage.getItem("authToken") || undefined;
   console.log(payload);
   const res = await fetch(`${API_BASE}/boards/new`, {

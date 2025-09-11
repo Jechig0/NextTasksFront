@@ -4,6 +4,7 @@ import { fetchBoards, createBoard } from '../services/boardsService';
 //import { fetchBoardsMock as fetchBoards, createBoardMock as createBoard } from "../services/mocks/boardsService.mock";
 import { BoardCard } from './BoardCard';
 import { useNavigate } from 'react-router-dom';
+import { checkStatus } from '../services/statusService';
 
 
 export const BoardList: React.FC<{ token?: string; onOpenBoard?: (id: number) => void }> = ({ token, onOpenBoard }) => {
@@ -17,18 +18,27 @@ export const BoardList: React.FC<{ token?: string; onOpenBoard?: (id: number) =>
 
  useEffect(() => {
         setLoading(true);
-        fetchBoards()
-            .then((b) => {
+        checkStatus().then(res => {
+            if (!res) {
+                navigate('/auth/login');
+                return;
+            }
+            // Usar res.id directamente en lugar de idUser
+            return fetchBoards(res.id);
+        })
+        .then((b) => {
+            if (b) {
                 // Sort boards by ID before setting state
                 if (b.length > 1) {
                     const sortedBoards = [...b].sort((a, b) => a.id - b.id);
                     setBoards(sortedBoards);
-                } else{
+                } else {
                     setBoards(b);
                 }
-            })
-            .catch((e) => setError(String(e)))
-            .finally(() => setLoading(false));
+            }
+        })
+        .catch((e) => setError(String(e)))
+        .finally(() => setLoading(false));
     }, [token]);
 
     const handleCreate = async (e: React.FormEvent) => {
@@ -38,7 +48,8 @@ export const BoardList: React.FC<{ token?: string; onOpenBoard?: (id: number) =>
         try {
             const created = await createBoard({
                 name: newBoard.name.trim(),
-                description: newBoard.description.trim()
+                description: newBoard.description.trim(),
+                owner: {id: (await checkStatus()).id}
             });
             // Sort boards when adding new board
             setBoards((prev) => [...prev, created].sort((a, b) => a.id - b.id));

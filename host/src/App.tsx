@@ -7,12 +7,14 @@ import DashBoard from "dashboard/dashboard";
 import LandingPage from "./components/LandingPage";
 import AuthGuard from "./Guards/AuthGuard";
 import GuestGuard from "./Guards/GuestGuard";
-import { AuthProvider } from "./context/AuthContext";
+import { AuthProvider, useAuthContext } from "./context/AuthContext";
 
 import "./index.css";
 
-const App = () => (
-  <AuthProvider>
+const AppRoutes = () => {
+  const { user } = useAuthContext();
+
+  return (
     <BrowserRouter>
       <Routes>
         <Route
@@ -35,7 +37,7 @@ const App = () => (
           path="/tasks/*"
           element={
             <AuthGuard>
-              <Tasks />
+              <Tasks userId={user?.id ?? 1} />
             </AuthGuard>
           }
         />
@@ -57,8 +59,16 @@ const App = () => (
         />
       </Routes>
     </BrowserRouter>
-  </AuthProvider>
-);
+  );
+};
+
+const App = () => {
+  return (
+    <AuthProvider>
+      <AppRoutes />
+    </AuthProvider>
+  );
+};
 
 const root = ReactDOM.createRoot(document.getElementById("app") as HTMLElement);
 
