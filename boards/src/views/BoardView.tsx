@@ -91,19 +91,32 @@ export default function BoardView({ boardId }: { boardId: number }) {
     );
 
     return (
-        <div className="p-6 min-h-screen bg-gray-100">
-            <div className="flex justify-between items-center mb-6">
-                <div>
-                    <h1 className="text-3xl font-bold text-gray-800">{board.name}</h1>
-                    {board.description && 
-                        <div className="text-sm text-gray-600 mt-1">{board.description}</div>
-                    }
+    <div className="min-h-screen bg-gradient-to-br from-yellow-600 to-yellow-950">
+        <div className="bg-white/95 backdrop-blur-sm shadow-lg bg-">
+            <div className="max-w-7xl mx-auto p-6">
+                <div className="flex justify-between items-center">
+                    <div>
+                        <h1 className="text-3xl font-bold bg-gradient-to-r from-sky-600 to-indigo-600 bg-clip-text text-transparent">
+                            {board.name}
+                        </h1>
+                        {board.description && 
+                            <div className="text-gray-600 mt-2 font-medium">{board.description}</div>
+                        }
+                    </div>
+                    <button 
+                        className="btn btn-accent btn-outline hover:scale-105 transition-all duration-200" 
+                        onClick={()=>navigate(`/boards`)}
+                    >
+                        ← Volver a Tableros
+                    </button>
                 </div>
-                <button className="btn btn-accent" onClick={()=>navigate(`/boards`)}> Volver </button>
             </div>
+        </div>
 
-            <DragDropContext onDragEnd={onDragEnd}>
-                <div className="flex gap-4 overflow-x-auto pb-6">
+        {/* Contenido principal */}
+        <div className="max-w-7xl mx-auto p-6">
+                        <DragDropContext onDragEnd={onDragEnd}>
+                <div className="flex gap-6 overflow-x-auto pb-6 pt-4 scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-transparent">
                     {columns.map((column) => (
                         <ListColumn 
                             key={column.id} 
@@ -112,30 +125,31 @@ export default function BoardView({ boardId }: { boardId: number }) {
                         />
                     ))}
                     
-                    <div className="w-72 flex-shrink-0">
+                    {/* Nueva lista */}
+                    <div className="w-80 flex-shrink-0">
                         {isAddingList ? (
-                            <div className="bg-white p-3 rounded-lg shadow">
+                            <div className="bg-white/95 backdrop-blur-sm p-4 rounded-xl shadow-lg border border-white/20">
                                 <input
                                     type="text"
                                     value={newListName}
                                     onChange={(e) => setNewListName(e.target.value)}
-                                    placeholder="List name"
-                                    className="w-full p-2 border rounded mb-2 focus:outline-none focus:ring-2 focus:ring-sky-500"
+                                    placeholder="Nombre de la lista"
+                                    className="w-full p-3 border rounded-lg mb-3 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent"
                                     autoFocus
                                 />
                                 <div className="flex gap-2">
                                     <button
                                         onClick={handleAddColumn}
-                                        className="px-3 py-1.5 rounded bg-sky-600 text-white hover:bg-sky-700 flex-grow"
+                                        className="btn btn-primary flex-grow"
                                     >
-                                        Añadir
+                                        Añadir lista
                                     </button>
                                     <button
                                         onClick={() => {
                                             setIsAddingList(false);
                                             setNewListName("");
                                         }}
-                                        className="px-3 py-1.5 rounded border border-gray-300 hover:bg-gray-100"
+                                        className="btn btn-ghost"
                                     >
                                         Cancelar
                                     </button>
@@ -144,10 +158,10 @@ export default function BoardView({ boardId }: { boardId: number }) {
                         ) : (
                             <button
                                 onClick={() => setIsAddingList(true)}
-                                className="w-full p-3 rounded-lg bg-white/80 hover:bg-white text-gray-600 hover:text-gray-800 shadow text-left transition-colors"
+                                className="w-full p-4 rounded-xl bg-white/90 hover:bg-white text-gray-600 hover:text-gray-800 shadow-md hover:shadow-lg border border-white/20 text-left transition-all duration-200 hover:scale-105"
                             >
                                 <span className="flex items-center">
-                                    <svg className="w-5 h-5 mr-2" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg className="w-6 h-6 mr-2" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} stroke="currentColor" viewBox="0 0 24 24">
                                         <path d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                                     </svg>
                                     Nueva lista
@@ -158,5 +172,6 @@ export default function BoardView({ boardId }: { boardId: number }) {
                 </div>
             </DragDropContext>
         </div>
+    </div>
     );
 }
