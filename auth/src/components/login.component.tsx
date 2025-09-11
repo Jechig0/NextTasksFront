@@ -20,7 +20,7 @@ const Login = () => {
     login(formData.username, formData.password)
       .then((response) => {
         console.log("Login successful:", response);
-        localStorage.setItem("authToken", response.token);
+        sessionStorage.setItem("authToken", response.token);
         window.location.reload();
       })
       .catch((error) => {

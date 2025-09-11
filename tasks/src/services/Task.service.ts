@@ -4,7 +4,7 @@ import { Task } from "../interfaces/task.interface";
 const baseUrl = "http://localhost:8080";
 
 export const getTaskById = async (taskId: number): Promise<Task> => {
-  const token = localStorage.getItem("authToken") || undefined;
+  const token = sessionStorage.getItem("authToken") || undefined;
   const response = await fetch(`${baseUrl}/tasks/details/${taskId}`, {
     headers: {
       "Content-Type": "application/json",
@@ -48,7 +48,7 @@ export const getTaskById = async (taskId: number): Promise<Task> => {
 };
 
 export const createTask = async (taskData: Partial<Task>): Promise<Task> => {
-  const token = localStorage.getItem("authToken") || undefined;
+  const token = sessionStorage.getItem("authToken") || undefined;
   const response = await fetch(`${baseUrl}/tasks`, {
     method: "POST",
     headers: {
@@ -101,7 +101,7 @@ export const updateTask = async (
 
   console.log(JSON.stringify(taskData));
 
-  const token = localStorage.getItem("authToken") || undefined;
+  const token = sessionStorage.getItem("authToken") || undefined;
   const response = await fetch(`${baseUrl}/tasks/${taskId}`, {
     method: "PUT",
     headers: {
@@ -155,7 +155,7 @@ export const updateTask = async (
 };
 
 export const deleteTask = async (taskId: number): Promise<void> => {
-  const token = localStorage.getItem("authToken") || undefined;
+  const token = sessionStorage.getItem("authToken") || undefined;
   const response = await fetch(`${baseUrl}/tasks/${taskId}`, {
     method: "DELETE",
     headers: {
@@ -182,7 +182,7 @@ export const addTagToTask = async (
   taskId: number,
   tagId: number
 ): Promise<void> => {
-  const token = localStorage.getItem("authToken") || undefined;
+  const token = sessionStorage.getItem("authToken") || undefined;
   const response = await fetch(`${baseUrl}/tasks/${taskId}/addTag/${tagId}`, {
     method: "PATCH",
     headers: {
@@ -211,7 +211,7 @@ export const removeTagFromTask = async (
   taskId: number,
   tagId: number
 ): Promise<void> => {
-  const token = localStorage.getItem("authToken") || undefined;
+  const token = sessionStorage.getItem("authToken") || undefined;
   const response = await fetch(
     `${baseUrl}/tasks/${taskId}/removeTag/${tagId}`,
     {

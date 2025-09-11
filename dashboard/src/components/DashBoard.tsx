@@ -4,9 +4,8 @@ import { Link, useNavigate } from "react-router-dom";
 
 const DashBoard: React.FC = () => {
   const { dashboard, loading, error, refetch } = useFetchDashBoard();
-
-  const navigate = useNavigate();
-
+  
+  
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
@@ -80,7 +79,7 @@ const DashBoard: React.FC = () => {
         <button
           className="btn btn-error"
           onClick={() => {
-            localStorage.removeItem("authToken");
+            sessionStorage.removeItem("authToken");
             window.location.reload();
           }}
         >

@@ -5,7 +5,7 @@ import { Task } from "../interfaces/task";
 const API_BASE = "http://localhost:8080";
 
 export async function fetchBoards(id?: number): Promise<Board[]> {
-  const token = localStorage.getItem("authToken") || undefined;
+  const token = sessionStorage.getItem("authToken") || undefined;
   const userId = id ? id : 1;
   const res = await fetch(`${API_BASE}/boards/owner/${userId}`, {
     headers: {
@@ -18,7 +18,7 @@ export async function fetchBoards(id?: number): Promise<Board[]> {
 }
 
 export async function fetchBoard(boardId: number): Promise<Board> {
-    const token = localStorage.getItem("authToken") || undefined;
+    const token = sessionStorage.getItem("authToken") || undefined;
 
   const res = await fetch(`${API_BASE}/boards/${boardId}`, {
     headers: {
@@ -38,7 +38,7 @@ export async function createBoard(payload: {
 }): Promise<Board> {
   payload.colorCode = payload.colorCode ? payload.colorCode : "#FFFFFF";
   payload.owner = payload.owner ? payload.owner : { id: 1 };
-  const token = localStorage.getItem("authToken") || undefined;
+  const token = sessionStorage.getItem("authToken") || undefined;
   console.log(payload);
   const res = await fetch(`${API_BASE}/boards/new`, {
     method: "POST",
@@ -53,7 +53,7 @@ export async function createBoard(payload: {
 }
 
 export async function fetchListColumns(boardId: number): Promise<Column[]> {
-  const token = localStorage.getItem("authToken") || undefined;
+  const token = sessionStorage.getItem("authToken") || undefined;
 
   const res = await fetch(`${API_BASE}/boards/${boardId}/columns`, {
     headers: {
@@ -70,7 +70,7 @@ export async function createListColumn(payload: {
   board: { id: number };
 }): Promise<Column> {
   const boardId = payload.board.id;
-  const token = localStorage.getItem("authToken") || undefined;
+  const token = sessionStorage.getItem("authToken") || undefined;
 
   const res = await fetch(`${API_BASE}/boards/${boardId}/columns/new`, {
     method: "POST",
@@ -85,7 +85,7 @@ export async function createListColumn(payload: {
 }
 
 export async function fetchTasks(columnId: number): Promise<Task[]> {
-  const token = localStorage.getItem("authToken") || undefined;
+  const token = sessionStorage.getItem("authToken") || undefined;
 
   const res = await fetch(`${API_BASE}/tasks/${columnId}`, {
     headers: {
@@ -101,7 +101,7 @@ export async function createTask(
   title: string,
   column: { id: number }
 ): Promise<Task> {
-  const token = localStorage.getItem("authToken") || undefined;
+  const token = sessionStorage.getItem("authToken") || undefined;
 
   const res = await fetch(`${API_BASE}/tasks`, {
     method: "POST",
@@ -119,7 +119,7 @@ export async function updateTaskPosition(
   taskId: number,
   columnId: number
 ): Promise<void> {
-  const token = localStorage.getItem("authToken") || undefined;
+  const token = sessionStorage.getItem("authToken") || undefined;
 
   const res = await fetch(`${API_BASE}/tasks/${taskId}/column/${columnId}`, {
     method: "PUT",
@@ -132,7 +132,7 @@ export async function updateTaskPosition(
 }
 
 export async function deleteBoard(boardId: number): Promise<void> {
-  const token = localStorage.getItem("authToken") || undefined;
+  const token = sessionStorage.getItem("authToken") || undefined;
 
   const res = await fetch(`${API_BASE}/boards/inactive/${boardId}`, {
     method: "PUT",

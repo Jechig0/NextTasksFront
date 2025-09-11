@@ -29,7 +29,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<any | null>(null);
 
   const login = (token: string, userData?: any) => {
-    localStorage.setItem('authToken', token);
+    sessionStorage.setItem('authToken', token);
     setIsAuthenticated(true);
     if (userData) {
       setUser(userData);
@@ -37,7 +37,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   const logout = () => {
-    localStorage.removeItem('authToken');
+    sessionStorage.removeItem('authToken');
     setIsAuthenticated(false);
     setUser(null);
   };
@@ -45,7 +45,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const checkAuth = async () => {
     try {
       setIsLoading(true);
-      const token = localStorage.getItem('authToken');
+      const token = sessionStorage.getItem('authToken');
       
       if (!token) {
         setIsAuthenticated(false);
