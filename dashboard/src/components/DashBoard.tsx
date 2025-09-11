@@ -100,13 +100,13 @@ const DashBoard: React.FC = () => {
               <g
                 fill="none"
                 stroke="#000"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
               >
                 <path
-                  stroke-dasharray="64"
-                  stroke-dashoffset="64"
+                  strokeDasharray="64"
+                  strokeDashoffset="64"
                   d="M12 7h8c0.55 0 1 0.45 1 1v10c0 0.55 -0.45 1 -1 1h-16c-0.55 0 -1 -0.45 -1 -1v-11Z"
                 >
                   <animate
