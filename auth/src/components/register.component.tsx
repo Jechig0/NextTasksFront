@@ -13,6 +13,10 @@ const Register = () => {
     fullName: "",
   });
 
+  const getRuta: () => string = () => {
+    return window.location.port === "8082" ? "/login" : "/auth/login";
+  }
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -80,7 +84,7 @@ const Register = () => {
 
         <button className="btn btn-success w-full" onClick={handleSubmit}>Registrarse</button>
         <div className="divider">o</div>
-        <Link to="/login" className="btn btn-outline btn-primary w-full">
+        <Link to={getRuta()} className="btn btn-outline btn-primary w-full">
           Iniciar sesión
         </Link>
       </form>

@@ -5,8 +5,8 @@ const LandingPage = () => {
   
 
   return (
-    <div className="min-h-screen bg-base-200 flex items-center justify-center">
-      <div className="text-center p-8">
+    <div className="min-h-screen bg-base-200 flex items-center justify-center  bg-gradient-to-br from-secondary to-accent">
+      <div className="text-center p-8 bg-white/80 rounded-lg shadow-lg backdrop-blur-md">
         <div className="avatar mb-6">
           <div className="w-24 rounded">
             <img 

@@ -19,7 +19,7 @@ export default App;
 const root = ReactDOM.createRoot(document.getElementById("app") as HTMLElement);
 
 root.render(
-  <BrowserRouter>
+  <BrowserRouter basename="auth">
     <App />
   </BrowserRouter>
 );
