@@ -53,13 +53,8 @@ const AddTagToTask: React.FC<AddTagToTaskProps> = ({ userId }) => {
   };
 
   const handleDelete = async () => {
-    try {
       await deleteSelectedTag(selectedTag, taskId, refetch, setSelectedTag);
-    } catch (error) {
-      // El error ya se maneja en el helper
-    }
   };
-
   const handleAddTagToTask = async () => {
     try {
       await addSelectedTagToTask(selectedTag, taskId, navigate);

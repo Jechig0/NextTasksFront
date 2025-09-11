@@ -5,7 +5,7 @@
     "build": "rspack build",
     "build:dev": "rspack build",
     "build:start": "cd dist && rspack serve",
-    "start": "rspack serve"
+    "start": "powershell -Command \"$env:NODE_ENV='production'; rspack serve\""
   },
   "devDependencies": {
     "@rspack/cli": "~1.2.0",

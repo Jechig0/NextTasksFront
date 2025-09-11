@@ -19,7 +19,6 @@ export function useFetchTags(userId: number): UseFetchTags {
             setLoading(true);
             setError(null);
             const data = await getAllTagsByOwner(userId);
-            console.log('Tags fetched:', data);
             setTags(data);
         } catch (err: any) {
             setError(err.message || 'Error al cargar los tags');

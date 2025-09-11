@@ -66,14 +66,11 @@ export const handleDelete = async (
 ) => {
   if (!selectedTag || !taskId) return;
 
-  try {
+  
     await deleteTag(selectedTag.id);
     await refetch();
     setSelectedTag(null);
-  } catch (error) {
-    console.error("Error al eliminar tag:", error);
-    throw error;
-  }
+  
 };
 
 export const handleAddTagToTask = async (

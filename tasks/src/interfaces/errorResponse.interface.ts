@@ -1,4 +1,4 @@
 export interface ErrorResponse {
     message: string;
-    details: string;
+    error: string;
 }

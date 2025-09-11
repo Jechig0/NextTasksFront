@@ -124,12 +124,12 @@ export const deleteTag = async (tagId: number): Promise<void> => {
     try {
       // Intentar obtener el mensaje de error del backend
       const errorData: ErrorResponse = await response.json();
-      console.log("Error deleting tag:", errorData.message);
-      throw new Error(errorData.message);
+      console.log("Error deleting tag:", errorData.error);
+      
     } catch (parseError) {
       // Si no se puede parsear la respuesta, usar el statusText
       console.log("Error deleting tag:", response.statusText);
-      throw new Error("Failed to delete tag");
+      
     }
   }
 };
