@@ -26,7 +26,7 @@ const LandingPage = () => {
 
         
           <div className="flex gap-4 justify-center">
-            <Link to="/auth/login" className="btn btn-primary">
+            <Link to="/auth/login" className="btn btn-primary !text-white" >
               Iniciar Sesión
             </Link>
           </div>
