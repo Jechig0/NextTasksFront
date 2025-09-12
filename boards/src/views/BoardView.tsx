@@ -91,7 +91,7 @@ export default function BoardView({ boardId }: { boardId: number }) {
     );
 
     return (
-    <div className="min-h-screen bg-gradient-to-br from-yellow-600 to-yellow-950">
+    <div className="min-h-screen bg-gradient-to-br from-slate-100 to-gray-300">
         <div className="bg-white/95 backdrop-blur-sm shadow-lg bg-">
             <div className="max-w-7xl mx-auto p-6">
                 <div className="flex justify-between items-center">
